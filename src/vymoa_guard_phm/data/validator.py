@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from math import isfinite
+
 from vymoa_guard_phm.config import AssessmentConfig
 from vymoa_guard_phm.contracts import InputWindow, ValidationFinding
 
@@ -21,6 +23,19 @@ def validate_input(window: InputWindow, config: AssessmentConfig) -> list[Valida
                 findings.append(_finding("FAIL", "DATA_MISSING_REQUIRED", "error", f"Missing orbit field: {required}.", f"orbit_event.{required}"))
         if not isinstance(event.get("features"), dict) or not event.get("features"):
             findings.append(_finding("FAIL", "DATA_MISSING_FEATURES", "error", "Orbit event requires a non-empty features mapping.", "orbit_event.features"))
+        else:
+            for name, value in event["features"].items():
+                try:
+                    if not isfinite(float(value)):
+                        raise ValueError
+                except (TypeError, ValueError):
+                    findings.append(_finding("FAIL", "DATA_INVALID_FEATURE", "error", f"Orbit feature {name!r} must be finite numeric data.", f"orbit_event.features.{name}"))
+            if "risk_score_hint" in event:
+                try:
+                    if not isfinite(float(event["risk_score_hint"])):
+                        raise ValueError
+                except (TypeError, ValueError):
+                    findings.append(_finding("FAIL", "DATA_INVALID_FEATURE", "error", "Orbit risk_score_hint must be finite numeric data.", "orbit_event.risk_score_hint"))
 
     if window.metadata.get("contradictory"):
         findings.append(_finding("FAIL", "DATA_CONTRADICTORY", "error", "Input metadata marks the window as contradictory."))
@@ -45,7 +60,8 @@ def validate_input(window: InputWindow, config: AssessmentConfig) -> list[Valida
         if channel is not None:
             seen_channels.add(str(channel))
         try:
-            float(row.get("value"))
+            if not isfinite(float(row.get("value"))):
+                raise ValueError
         except (TypeError, ValueError):
             findings.append(_finding("FAIL", "DATA_INVALID_VALUE", "error", "Telemetry value must be numeric.", f"telemetry[{index}].value"))
 

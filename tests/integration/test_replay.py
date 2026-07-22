@@ -1,4 +1,6 @@
 from vymoa_guard_phm.replay import load_scenario, run_assessment
+from vymoa_guard_phm.contracts import InputWindow
+from vymoa_guard_phm.reports.render import to_json
 
 
 def test_nominal_replay_is_deterministic():
@@ -19,3 +21,14 @@ def test_bad_replay_abstains():
     assert assessment.decision.status == "INSUFFICIENT_DATA"
     assert assessment.decision.abstained is True
 
+
+def test_nonfinite_input_abstains_with_strict_evidence_record():
+    window = InputWindow(
+        scenario_id="nonfinite",
+        orbit_event={"event_id": "bad", "timestamp": "2026-01-01T00:00:00Z", "features": {"x": float("nan")}},
+        telemetry=[{"timestamp": "2026-01-01T00:00:00Z", "channel": "power_bus", "value": float("inf")}],
+    )
+    assessment = run_assessment(window)
+    assert assessment.decision.status == "INSUFFICIENT_DATA"
+    assert assessment.verify_evidence_hash()
+    assert "NaN" not in to_json(assessment)

@@ -87,7 +87,7 @@ Local evaluation command (after the ignored CSV is acquired):
 python -m vymoa_guard_phm.evaluation.telemetry --segments data/downloads/opssat-ad/segments.csv --manifest data/manifests/esa_opssat_ad.yaml
 ```
 
-## Phase 5 - Decision layer and evidence chain
+## Phase 5 - Decision layer and evidence chain (complete)
 
 Primary skills: `unit-test-starter`, `security-quick-scan`.
 
@@ -100,7 +100,11 @@ Deliverables:
 
 Exit gate: malformed, stale, and contradictory inputs abstain correctly and every non-green result has evidence.
 
-## Phase 6 - Dashboard and reporting
+Current status: the pure policy function now validates score semantics and numeric bounds, honors optional telemetry, requires channel/window evidence for high telemetry, handles score/class disagreement conservatively, preserves reason-code precedence, and terminates every path with a versioned rule trace. See [Phase 5 Decision Layer](PHASE_5_DECISION_LAYER.md).
+
+The current phase does not combine orbit and telemetry into a probability or issue maneuver commands.
+
+## Phase 6 - Dashboard and reporting (next)
 
 Primary skills: `ui-ux-pro-max`, `accessibility-basic-check`, and `readme-polish`.
 

@@ -58,3 +58,15 @@
 **Decision:** Use train-fitted robust rolling statistics as the canonical OPSSAT-AD anomaly score. Fit and evaluate a per-channel Isolation Forest baseline, but do not fuse it into the canonical score by default.
 
 **Rationale:** On the frozen group-temporal holdout, the robust score reached ROC-AUC 0.6096, PR-AUC 0.3889, and false-alarm rate 0.8281 at the exploratory threshold. The Isolation Forest comparison reached ROC-AUC 0.5502, PR-AUC 0.3546, and false-alarm rate 0.9263. The comparison remains valuable evidence for future tuning, but its current result does not justify adding complexity or false alarms to the operator-facing score.
+
+## DL-012 - Make policy safety gates explicit and terminal
+
+**Decision:** The decision layer must reject invalid policy configuration, unsupported score semantics, missing/non-finite/out-of-range scores, unavailable required assessments, and high telemetry without channel/window evidence before evaluating triage thresholds. Every path ends with a terminal `POL-100` rule trace.
+
+**Rationale:** A deterministic policy is only safe if malformed model output cannot fall through to a benign state. The Phase 5 implementation preserves quality-failure precedence, supports optional telemetry without silent fusion, records model disagreement, and keeps `INSUFFICIENT_DATA` as the conservative outcome when evidence is not interpretable.
+
+## DL-013 - Bind canonical assessments to integrity fingerprints
+
+**Decision:** Every replayed `MissionAssessment` carries input/config hashes, a policy hash, an evidence schema version, and an evidence hash computed from canonical assessment JSON with the hash field blanked. Reports use strict JSON serialization and expose the evidence hash.
+
+**Rationale:** A rule trace without integrity linkage can be altered or detached from its inputs. The fingerprint is tamper-evidence for replay and mutation checks, not an authenticity signature or a substitute for signed operational records.

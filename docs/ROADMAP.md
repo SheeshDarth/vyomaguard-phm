@@ -73,6 +73,8 @@ The roadmap prioritizes one validated replayable path. The baseline system is th
 
 **Exit gate:** dashboard and exports are generated from the same canonical assessment object.
 
+**Phase 5 completion note:** the deterministic policy and evidence fingerprint are complete. Phase 6 must consume these fields without reimplementing policy logic or recasting review statuses as health or safety judgments.
+
 ## Week 6 — Hardening and presentation
 
 **Deliverables**

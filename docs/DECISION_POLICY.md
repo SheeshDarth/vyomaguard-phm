@@ -43,6 +43,18 @@ Rules are evaluated in this order:
 
 The exact numeric thresholds are configuration, not hard-coded in the UI. They are frozen and versioned after evaluation.
 
+### Implemented Phase 5 guards
+
+The implementation adds these deterministic gates before threshold-based triage:
+
+- `POL-001`: any validation failure abstains;
+- `POL-002`: policy thresholds must be finite, bounded, and ordered;
+- `POL-003`: orbit output must be a finite `[0, 1]` `ranking_score`;
+- `POL-004`: required telemetry must be a finite `[0, 1]` `anomaly_score`; optional telemetry may be unavailable;
+- `POL-007`: a high telemetry score must include affected channels and a start/end anomaly window;
+- `POL-008`: score-derived orbit class disagreement produces conservative monitoring;
+- `POL-100`: every return path records a terminal rule-trace outcome.
+
 ## 5. State semantics
 
 | Status | Meaning | What it does not mean |
@@ -69,6 +81,13 @@ Suggested stable codes:
 - `MODEL_DISAGREEMENT`
 - `NO_REVIEW_TRIGGER`
 - `COMPOUND_EVIDENCE`
+- `MODEL_SCORE_SEMANTICS_INVALID`
+- `MODEL_SCORE_MISSING`
+- `MODEL_SCORE_INVALID`
+- `MODEL_SCORE_OUT_OF_RANGE`
+- `POLICY_CONFIGURATION_INVALID`
+- `TELEMETRY_EVIDENCE_MISSING`
+- `TELEMETRY_UNAVAILABLE_OPTIONAL`
 
 ## 7. Safety rules
 

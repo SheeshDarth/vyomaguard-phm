@@ -67,6 +67,8 @@ Available deterministic fixtures:
   - [Phase 3 Orbit Baseline](docs/PHASE_3_BASELINE.md)
   - [Phase 4 Telemetry Baseline](docs/PHASE_4_TELEMETRY_BASELINE.md)
   - [Phase 4 Deep Review](docs/PHASE_4_REVIEW.md)
+  - [Phase 5 Decision Layer](docs/PHASE_5_DECISION_LAYER.md)
+  - [Phase 5 Deep Review](docs/PHASE_5_REVIEW.md)
 - [Evaluation and Acceptance](docs/EVALUATION_AND_ACCEPTANCE.md)
 - [Decision Policy](docs/DECISION_POLICY.md)
 - [Six-Week Roadmap](docs/ROADMAP.md)

@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
 from dataclasses import asdict, dataclass, field
+from hmac import compare_digest
 from typing import Any, Literal
 
 ValidationStatus = Literal["PASS", "WARN", "FAIL"]
@@ -96,8 +99,19 @@ class MissionAssessment:
     decision: DecisionAssessment
     versions: dict[str, str]
     limitations: list[str] = field(default_factory=list)
+    evidence_schema_version: str = "evidence-0.1.0"
+    evidence_hash: str = ""
 
     def to_dict(self) -> dict[str, Any]:
         payload = asdict(self)
         payload["quality_findings"] = [finding.to_dict() for finding in self.quality_findings]
         return payload
+
+    def compute_evidence_hash(self) -> str:
+        payload = self.to_dict()
+        payload["evidence_hash"] = ""
+        canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"), allow_nan=False)
+        return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+    def verify_evidence_hash(self) -> bool:
+        return bool(self.evidence_hash) and compare_digest(self.evidence_hash, self.compute_evidence_hash())

@@ -9,7 +9,7 @@ from vymoa_guard_phm.contracts import MissionAssessment
 
 
 def to_json(assessment: MissionAssessment) -> str:
-    return json.dumps(assessment.to_dict(), indent=2, sort_keys=True) + "\n"
+    return json.dumps(assessment.to_dict(), allow_nan=False, indent=2, sort_keys=True) + "\n"
 
 
 def to_markdown(assessment: MissionAssessment) -> str:
@@ -24,6 +24,7 @@ def to_markdown(assessment: MissionAssessment) -> str:
         "> Prototype decision-support output. Not flight-certified software and not an autonomous maneuver recommendation.",
         "",
         f"- **Run ID:** `{assessment.run_id}`",
+        f"- **Evidence hash:** `{assessment.evidence_hash}`",
         f"- **Created:** `{assessment.created_at}`",
         f"- **Decision:** **{decision['status']}** — {decision['review_action']}",
         f"- **Abstained:** `{decision['abstained']}`",
@@ -68,4 +69,3 @@ def write_reports(assessment: MissionAssessment, output_dir: str | Path) -> tupl
     json_path.write_text(to_json(assessment), encoding="utf-8")
     markdown_path.write_text(to_markdown(assessment), encoding="utf-8")
     return json_path, markdown_path
-

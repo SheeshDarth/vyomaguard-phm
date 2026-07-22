@@ -12,7 +12,7 @@ The source brief is the authoritative product input. This table maps its major s
 | BR-06 | Telemetry anomaly module | [PRD](PRD.md), [Architecture](ARCHITECTURE.md) | Labeled/injected-fault evaluation |
 | BR-07 | OPSSAT-AD or SMAP/MSL options | [Data and Labels](DATA_AND_LABELS.md) | Week 1 dataset decision record |
 | BR-08 | Affected channels and anomaly windows | [TRD](TRD.md), [PRD](PRD.md) | Channel/window output tests |
-| BR-09 | Mission decision layer | [Decision Policy](DECISION_POLICY.md) | Rule-table and precedence tests |
+| BR-09 | Mission decision layer | [Decision Policy](DECISION_POLICY.md) | Rule-table, precedence, invalid-output, disagreement, and abstention tests |
 | BR-10 | Deterministic policy preferred over LLM dependency | [Architecture](ARCHITECTURE.md), [Safety](SAFETY_AND_LIMITATIONS.md) | No LLM in decision path |
 | BR-11 | Streamlit screens | [PRD](PRD.md), [Roadmap](ROADMAP.md) | UI smoke test and replay |
 | BR-12 | Markdown/PDF/JSON report export | [TRD](TRD.md), [PRD](PRD.md) | Golden JSON/Markdown; optional PDF check |
@@ -23,4 +23,4 @@ The source brief is the authoritative product input. This table maps its major s
 
 ## Evidence status
 
-All rows above are design-level traceability. No implementation or metric result is claimed yet. Verification entries become evidence only after the corresponding code, fixture, and test exist.
+Rows BR-09 and the related foundation/replay rows now have implementation evidence in the repository test suite. Remaining rows are design-level traceability until their corresponding UI, export, or hardening gates are completed.
