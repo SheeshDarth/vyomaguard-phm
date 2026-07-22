@@ -2,9 +2,6 @@
 
 from __future__ import annotations
 
-from datetime import datetime
-from typing import Any
-
 from vymoa_guard_phm.config import AssessmentConfig
 from vymoa_guard_phm.contracts import InputWindow, ValidationFinding
 
@@ -63,4 +60,3 @@ def validate_input(window: InputWindow, config: AssessmentConfig) -> list[Valida
 
 def has_failure(findings: list[ValidationFinding]) -> bool:
     return any(finding.status == "FAIL" for finding in findings)
-

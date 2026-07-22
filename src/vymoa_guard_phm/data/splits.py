@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from datetime import datetime
 from typing import Any
 
 
@@ -20,4 +19,3 @@ def assert_no_overlap(train: list[dict[str, Any]], test: list[dict[str, Any]], k
     overlap = train_keys & test_keys
     if overlap:
         raise ValueError(f"Leakage detected for {key}: {sorted(str(item) for item in overlap)}")
-
