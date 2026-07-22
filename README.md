@@ -32,7 +32,8 @@ python -m pip install -e ".[dev]"
 $env:PYTHONPATH = "src"
 python -m pytest
 python -m vymoa_guard_phm.replay --scenario nominal --output reports/generated
-streamlit run src/vymoa_guard_phm/app.py
+python -m vymoa_guard_phm.data.manifest --manifest-dir data/manifests
+python -m streamlit run src/vymoa_guard_phm/app.py
 ```
 
 Available deterministic fixtures:

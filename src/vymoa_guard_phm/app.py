@@ -3,6 +3,15 @@
 from __future__ import annotations
 
 import json
+import sys
+from pathlib import Path
+
+# Streamlit executes this file as a script. Add the src root so the app works
+# from a fresh checkout even before an editable install is performed.
+if __package__ in (None, ""):
+    source_root = Path(__file__).resolve().parents[1]
+    if str(source_root) not in sys.path:
+        sys.path.insert(0, str(source_root))
 
 try:
     import streamlit as st
@@ -51,4 +60,3 @@ def render() -> None:
 
 if __name__ == "__main__":  # pragma: no cover
     render()
-
