@@ -46,3 +46,9 @@
 **Decision:** Freeze source URIs, artifact hashes, label definitions, and grouping metadata now, but keep feature availability, split assignments, evaluation thresholds, and public model claims provisional until Phase 3 independently reproduces them.
 
 **Rationale:** The Phase 2 architecture review found that dataset identity alone does not prove decision-time availability or leakage-free modeling. The repository now has machine-readable target contracts, source-order final-CDM selection with explicit tie handling, canonical `group_temporal` manifests, and a transparent continuous regression/ranking slice. Phase 3 must add runtime artifact verification, manifest-driven feature allowlists, pre-registered metrics, and replay evidence before any model claim is frozen.
+
+## DL-010 - Phase 3 baseline is research-only
+
+**Decision:** Accept the checksum-verified ESA Ridge pipeline as a reproducibility/instrumentation baseline only. Keep model validity, operational utility, probability language, telemetry fusion, and deployment claims blocked.
+
+**Rationale:** The first local holdout produced MAE 6.716, RMSE 8.894, Spearman 0.448, and top-risk recall 0.148 at a 10% review load, with a constant-target comparator at 0.144. The run bundle and deterministic bootstrap intervals make the result inspectable, but decision-time availability, target/censoring validity, post-decision leakage, slice stability, and signed practical thresholds are not yet established.

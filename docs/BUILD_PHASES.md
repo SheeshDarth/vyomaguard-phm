@@ -57,6 +57,14 @@ Deliverables:
 
 Exit gate: reproducible holdout metrics are recorded without temporal or entity leakage.
 
+Current status: the narrow reproducibility/instrumentation gate passes; the model-validity gate remains blocked pending the availability and leakage evidence listed in [Phase 3 Orbit Baseline](PHASE_3_BASELINE.md).
+
+Local evaluation command (after the ignored archive is acquired):
+
+```text
+python -m vymoa_guard_phm.evaluation.orbit --archive data/downloads/esa-collision-avoidance/train_data.zip
+```
+
 ## Phase 4 - Telemetry anomaly engine
 
 Primary skills: `integration-test-planner` and `performance-budgeting`.

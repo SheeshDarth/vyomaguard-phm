@@ -29,7 +29,7 @@ The roadmap prioritizes one validated replayable path. The baseline system is th
 - initial threshold and class mapping;
 - failure-case table.
 
-**Exit gate:** no leakage, metrics run end-to-end, and the model is reproducible.
+**Exit gate:** the reproducible engineering path runs end-to-end; stronger model claims remain blocked until decision-time availability, leakage, baselines, uncertainty, and acceptance-threshold gates pass.
 
 ## Week 3 — Telemetry baseline and evaluation
 

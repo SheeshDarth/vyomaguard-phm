@@ -11,8 +11,12 @@ from vymoa_guard_phm.data.orbit_target import select_final_cdm_rows
 
 try:
     from sklearn.linear_model import Ridge
+    from sklearn.pipeline import make_pipeline
+    from sklearn.preprocessing import StandardScaler
 except ImportError:  # pragma: no cover - the heuristic path remains usable.
     Ridge = None  # type: ignore[assignment,misc]
+    StandardScaler = None  # type: ignore[assignment,misc]
+    make_pipeline = None  # type: ignore[assignment,misc]
 
 
 class OrbitRiskEngine:
@@ -24,8 +28,8 @@ class OrbitRiskEngine:
         self.target_min: float | None = None
         self.target_max: float | None = None
 
-    def fit(self, rows: list[dict[str, Any]]) -> "OrbitRiskEngine":
-        if Ridge is None or len(rows) < 4:
+    def fit(self, rows: list[dict[str, Any]], feature_allowlist: list[str] | None = None) -> "OrbitRiskEngine":
+        if Ridge is None or StandardScaler is None or make_pipeline is None or len(rows) < 4:
             return self
         source_rows = list(rows)
         if any("event_id" in row for row in source_rows):
@@ -41,12 +45,14 @@ class OrbitRiskEngine:
             labeled_rows.append((dict(row.get("event", row)), target))
         if len(labeled_rows) < 4 or len({target for _, target in labeled_rows}) < 2:
             return self
-        all_names = sorted({name for event, _ in labeled_rows for name in numeric_features(event).keys()})
+        available_names = {name for event, _ in labeled_rows for name in numeric_features(event).keys()}
+        all_names = list(dict.fromkeys(feature_allowlist)) if feature_allowlist else sorted(available_names)
+        all_names = [name for name in all_names if name in available_names]
         if not all_names:
             return self
         matrix = [feature_vector(event, all_names)[1] for event, _ in labeled_rows]
         targets = [target for _, target in labeled_rows]
-        model = Ridge(alpha=1.0)
+        model = make_pipeline(StandardScaler(), Ridge(alpha=1.0))
         model.fit(matrix, targets)
         self.model = model
         self.feature_names = all_names
@@ -78,8 +84,10 @@ class OrbitRiskEngine:
             _, vector = feature_vector(event, self.feature_names)
             raw_value = float(self.model.predict([vector])[0])
             score = self._ranking_score(raw_value)
-            coefficients = self.model.coef_
-            contributions = [(name, coefficient * value, value) for name, coefficient, value in zip(self.feature_names, coefficients, vector)]
+            scaler = self.model.named_steps["standardscaler"]
+            coefficients = self.model.named_steps["ridge"].coef_
+            scaled_vector = scaler.transform([vector])[0]
+            contributions = [(name, coefficient * value, value) for name, coefficient, value in zip(self.feature_names, coefficients, scaled_vector)]
             contributions.sort(key=lambda item: abs(item[1]), reverse=True)
             top_features = [{"name": name, "value": value, "attribution": contribution, "direction": "raises" if contribution >= 0 else "lowers"} for name, contribution, value in contributions[:5]]
             evidence = ["Regression output is normalized to a ranking score using the training-target range.", "The raw target is source-defined base-10 log risk, not a collision probability."]

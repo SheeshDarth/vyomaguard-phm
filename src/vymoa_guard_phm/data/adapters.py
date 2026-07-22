@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import csv
+import io
 import json
+import zipfile
 from pathlib import Path
 from typing import Any
 
@@ -20,6 +22,18 @@ def load_json_records(path: str | Path) -> list[dict[str, Any]]:
 def load_csv_records(path: str | Path) -> list[dict[str, Any]]:
     with Path(path).open(newline="", encoding="utf-8") as handle:
         return [dict(row) for row in csv.DictReader(handle)]
+
+
+def load_zip_csv_records(path: str | Path, member: str = "train_data.csv") -> list[dict[str, Any]]:
+    """Load one CSV member from an explicit local ZIP archive."""
+
+    with zipfile.ZipFile(path) as archive:
+        try:
+            stream = archive.open(member)
+        except KeyError as exc:
+            raise ValueError(f"ZIP archive does not contain CSV member {member!r}.") from exc
+        with stream, io.TextIOWrapper(stream, encoding="utf-8", newline="") as handle:
+            return [dict(row) for row in csv.DictReader(handle)]
 
 
 def load_records(path: str | Path) -> list[dict[str, Any]]:
@@ -43,4 +57,3 @@ def manifest_for(path: str | Path, *, dataset_id: str, label_definition: str, sp
         "status": "UNVERIFIED",
         "notes": "Complete the source, checksum, license, and schema fields before training.",
     }
-

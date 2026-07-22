@@ -1,0 +1,11 @@
+contract_id: esa-orbit-availability-v1
+dataset_id: esa-collision-avoidance-challenge
+status: BLOCKED_UNTIL_SIGNOFF
+decision_time_field: UNCONFIRMED-source-decision-time
+time_order_field: time_to_tca
+time_order_semantics: PROXY_ONLY-until-calendar-and-write-time-audit
+feature_allowlist_source: data/manifests/esa_collision_avoidance.yaml
+post_decision_fields: [risk]
+required_review: field-level availability, write-time provenance, post-decision leakage, duplicate-event audit
+permitted_phase3_claim: retrospective research ranking baseline only
+prohibited_claims: [collision_probability, operational_safety, maneuver_need, flight_status, certification]

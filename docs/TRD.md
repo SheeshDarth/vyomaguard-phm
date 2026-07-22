@@ -76,6 +76,8 @@ Required output:
 
 If the label audit does not support calibration, the field must use `ranking_score` and the UI/report must not call it probability or confidence.
 
+The Phase 3 evaluator verifies the manifest checksum, selects the final occurrence of each event in source order, splits whole events by the declared temporal ordering proxy, fits only on the training groups, and reports log-risk regression error plus ranking quality and top-risk retrieval.
+
 ### 3.5 Telemetry anomaly engine
 
 The baseline shall combine robust rolling statistics with Isolation Forest over a bounded channel subset. It shall return anomaly score, affected channels, contiguous anomaly windows, threshold version, and evaluation reference. An autoencoder is permitted only as a non-blocking comparison after the baseline is evaluated on held-out/injected faults.

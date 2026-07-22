@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 from typing import Iterable
 
 import numpy as np
@@ -42,3 +43,72 @@ def binary_metrics(y_true: Iterable[int], scores: Iterable[float], threshold: fl
         result["pr_auc"] = float("nan")
     return result
 
+
+def _ordinal_ranks(values: np.ndarray) -> np.ndarray:
+    order = np.argsort(values, kind="mergesort")
+    ranks = np.empty(len(values), dtype=float)
+    ranks[order] = np.arange(1, len(values) + 1, dtype=float)
+    return ranks
+
+
+def regression_ranking_metrics(
+    y_true: Iterable[float], predictions: Iterable[float], *, review_fraction: float = 0.1
+) -> dict[str, float]:
+    """Evaluate source-defined continuous risk without probability language."""
+
+    labels = np.asarray(list(y_true), dtype=float)
+    scores = np.asarray(list(predictions), dtype=float)
+    if len(labels) != len(scores):
+        raise ValueError("y_true and predictions must have equal length.")
+    if len(labels) == 0:
+        return {"n": 0.0, "mae": 0.0, "rmse": 0.0, "spearman": float("nan"), "top_risk_recall": 0.0}
+    if not 0.0 < review_fraction <= 1.0:
+        raise ValueError("review_fraction must be in the interval (0, 1].")
+    residuals = scores - labels
+    top_n = max(1, math.ceil(len(labels) * review_fraction))
+    actual_top = set(np.argsort(labels, kind="mergesort")[-top_n:])
+    predicted_top = set(np.argsort(scores, kind="mergesort")[-top_n:])
+    if len(np.unique(labels)) > 1 and len(np.unique(scores)) > 1:
+        spearman = float(np.corrcoef(_ordinal_ranks(labels), _ordinal_ranks(scores))[0, 1])
+    else:
+        spearman = float("nan")
+    return {
+        "n": float(len(labels)),
+        "mae": float(np.mean(np.abs(residuals))),
+        "rmse": float(np.sqrt(np.mean(np.square(residuals)))),
+        "spearman": spearman,
+        "top_risk_recall": float(len(actual_top & predicted_top) / len(actual_top)),
+    }
+
+
+def bootstrap_metric_ci(
+    y_true: Iterable[float],
+    predictions: Iterable[float],
+    *,
+    metric: str,
+    review_fraction: float = 0.1,
+    iterations: int = 200,
+    random_seed: int = 42,
+) -> dict[str, float]:
+    """Return deterministic percentile intervals for a ranking metric."""
+
+    labels = np.asarray(list(y_true), dtype=float)
+    scores = np.asarray(list(predictions), dtype=float)
+    if len(labels) != len(scores):
+        raise ValueError("y_true and predictions must have equal length.")
+    if iterations < 1:
+        raise ValueError("iterations must be positive.")
+    if metric not in {"spearman", "top_risk_recall"}:
+        raise ValueError(f"Unsupported bootstrap metric: {metric!r}.")
+    if len(labels) == 0:
+        return {"lower": float("nan"), "upper": float("nan")}
+    rng = np.random.default_rng(random_seed)
+    values: list[float] = []
+    for _ in range(iterations):
+        sample = rng.integers(0, len(labels), size=len(labels))
+        value = regression_ranking_metrics(labels[sample], scores[sample], review_fraction=review_fraction)[metric]
+        if math.isfinite(value):
+            values.append(value)
+    if not values:
+        return {"lower": float("nan"), "upper": float("nan")}
+    return {"lower": float(np.percentile(values, 2.5)), "upper": float(np.percentile(values, 97.5))}
