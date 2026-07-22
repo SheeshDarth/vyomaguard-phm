@@ -1,6 +1,4 @@
 import json
-from tempfile import TemporaryDirectory
-
 from vymoa_guard_phm.replay import load_scenario, run_assessment
 from vymoa_guard_phm.reports.render import to_json, to_markdown, write_reports
 
@@ -25,15 +23,14 @@ def test_all_fixture_scenarios_cross_the_canonical_flow():
         assert payload["decision"]["rule_trace"]
 
 
-def test_reports_preserve_the_canonical_assessment():
+def test_reports_preserve_the_canonical_assessment(tmp_path):
     assessment = run_assessment(load_scenario("conjunction_risk"))
-    with TemporaryDirectory(dir="C:/tmp") as output_dir:
-        json_path, markdown_path = write_reports(assessment, output_dir)
+    json_path, markdown_path = write_reports(assessment, tmp_path)
 
-        assert json.loads(json_path.read_text(encoding="utf-8")) == assessment.to_dict()
-        markdown = markdown_path.read_text(encoding="utf-8")
-        assert assessment.run_id in markdown
-        assert f"**{assessment.decision.status}**" in markdown
-        assert "Decision rule trace" in markdown
-        assert to_json(assessment) == json_path.read_text(encoding="utf-8")
-        assert to_markdown(assessment) == markdown
+    assert json.loads(json_path.read_text(encoding="utf-8")) == assessment.to_dict()
+    markdown = markdown_path.read_text(encoding="utf-8")
+    assert assessment.run_id in markdown
+    assert f"**{assessment.decision.status}**" in markdown
+    assert "Decision rule trace" in markdown
+    assert to_json(assessment) == json_path.read_text(encoding="utf-8")
+    assert to_markdown(assessment) == markdown
