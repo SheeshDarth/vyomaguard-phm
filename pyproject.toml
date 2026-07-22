@@ -27,6 +27,7 @@ dev = ["pytest>=8.0", "ruff>=0.5"]
 vymoa-guard-replay = "vymoa_guard_phm.replay:main"
 vymoa-guard-manifest-audit = "vymoa_guard_phm.data.manifest:main"
 vymoa-guard-orbit-eval = "vymoa_guard_phm.evaluation.orbit:main"
+vymoa-guard-telemetry-eval = "vymoa_guard_phm.evaluation.telemetry:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

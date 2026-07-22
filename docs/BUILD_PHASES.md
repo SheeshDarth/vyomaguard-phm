@@ -28,7 +28,7 @@ Deliverables:
 
 Exit gate: `python -m pytest` passes and every fixture produces a deterministic canonical assessment.
 
-## Phase 2 - Dataset acquisition and label audit (current)
+## Phase 2 - Dataset acquisition and label audit (complete)
 
 Primary skills: `security-quick-scan` for data-boundary review and `integration-test-planner` for ingestion tests.
 
@@ -65,7 +65,7 @@ Local evaluation command (after the ignored archive is acquired):
 python -m vymoa_guard_phm.evaluation.orbit --archive data/downloads/esa-collision-avoidance/train_data.zip
 ```
 
-## Phase 4 - Telemetry anomaly engine
+## Phase 4 - Telemetry anomaly engine (current)
 
 Primary skills: `integration-test-planner` and `performance-budgeting`.
 
@@ -78,6 +78,14 @@ Deliverables:
 - optional autoencoder only if it improves held-out results materially.
 
 Exit gate: telemetry output is validated as an anomaly score, or explicitly marked exploratory.
+
+Current status: the bounded OPSSAT-AD v2 evaluator passes its engineering gate. The robust rolling baseline is the canonical score; Isolation Forest is retained as a reproducible comparison because it increases false alarms on the frozen holdout. Results are explicitly exploratory and make no failure-probability claim. Threshold provenance, alert workload, detection delay, and row/window localization remain Phase 5 validation work. See [Phase 4 Telemetry Baseline](PHASE_4_TELEMETRY_BASELINE.md).
+
+Local evaluation command (after the ignored CSV is acquired):
+
+```text
+python -m vymoa_guard_phm.evaluation.telemetry --segments data/downloads/opssat-ad/segments.csv --manifest data/manifests/esa_opssat_ad.yaml
+```
 
 ## Phase 5 - Decision layer and evidence chain
 

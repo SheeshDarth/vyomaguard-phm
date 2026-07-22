@@ -12,6 +12,9 @@ class AssessmentConfig:
     orbit_review_threshold: float = 0.65
     orbit_red_threshold: float = 0.85
     telemetry_anomaly_threshold: float = 0.65
+    telemetry_rolling_window: int = 24
+    telemetry_iforest_estimators: int = 50
+    telemetry_iforest_primary: bool = False
     freshness_limit_minutes: float = 60.0
     policy_version: str = "policy-0.1.0"
     orbit_model_version: str = "orbit-regression-ranking-baseline-0.1.0"

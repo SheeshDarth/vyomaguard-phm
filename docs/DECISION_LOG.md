@@ -52,3 +52,9 @@
 **Decision:** Accept the checksum-verified ESA Ridge pipeline as a reproducibility/instrumentation baseline only. Keep model validity, operational utility, probability language, telemetry fusion, and deployment claims blocked.
 
 **Rationale:** The first local holdout produced MAE 6.716, RMSE 8.894, Spearman 0.448, and top-risk recall 0.148 at a 10% review load, with a constant-target comparator at 0.144. The run bundle and deterministic bootstrap intervals make the result inspectable, but decision-time availability, target/censoring validity, post-decision leakage, slice stability, and signed practical thresholds are not yet established.
+
+## DL-011 - Keep robust telemetry primary and Isolation Forest comparative
+
+**Decision:** Use train-fitted robust rolling statistics as the canonical OPSSAT-AD anomaly score. Fit and evaluate a per-channel Isolation Forest baseline, but do not fuse it into the canonical score by default.
+
+**Rationale:** On the frozen group-temporal holdout, the robust score reached ROC-AUC 0.6096, PR-AUC 0.3889, and false-alarm rate 0.8281 at the exploratory threshold. The Isolation Forest comparison reached ROC-AUC 0.5502, PR-AUC 0.3546, and false-alarm rate 0.9263. The comparison remains valuable evidence for future tuning, but its current result does not justify adding complexity or false alarms to the operator-facing score.

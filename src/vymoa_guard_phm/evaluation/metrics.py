@@ -44,6 +44,49 @@ def binary_metrics(y_true: Iterable[int], scores: Iterable[float], threshold: fl
     return result
 
 
+def anomaly_detection_metrics(
+    y_true: Iterable[int], scores: Iterable[float], threshold: float = 0.65
+) -> dict[str, float | int | None]:
+    """Evaluate bounded anomaly scores without treating them as probabilities."""
+
+    labels = np.asarray(list(y_true), dtype=int)
+    anomaly_scores = np.asarray(list(scores), dtype=float)
+    if len(labels) != len(anomaly_scores):
+        raise ValueError("y_true and scores must have equal length.")
+    if len(labels) == 0:
+        return {
+            "n": 0,
+            "positive_count": 0,
+            "threshold": float(threshold),
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "false_negative_rate": 0.0,
+            "false_alarm_rate": None,
+            "roc_auc": None,
+            "pr_auc": None,
+        }
+    predictions = (anomaly_scores >= threshold).astype(int)
+    negatives = int(np.sum(labels == 0))
+    false_alarms = int(np.sum((labels == 0) & (predictions == 1)))
+    result: dict[str, float | int | None] = {
+        "n": int(len(labels)),
+        "positive_count": int(np.sum(labels == 1)),
+        "threshold": float(threshold),
+        "precision": float(precision_score(labels, predictions, zero_division=0)),
+        "recall": float(recall_score(labels, predictions, zero_division=0)),
+        "f1": float(f1_score(labels, predictions, zero_division=0)),
+        "false_negative_rate": float(1.0 - recall_score(labels, predictions, zero_division=0)),
+        "false_alarm_rate": float(false_alarms / negatives) if negatives else None,
+        "roc_auc": None,
+        "pr_auc": None,
+    }
+    if len(np.unique(labels)) == 2:
+        result["roc_auc"] = float(roc_auc_score(labels, anomaly_scores))
+        result["pr_auc"] = float(average_precision_score(labels, anomaly_scores))
+    return result
+
+
 def _ordinal_ranks(values: np.ndarray) -> np.ndarray:
     order = np.argsort(values, kind="mergesort")
     ranks = np.empty(len(values), dtype=float)

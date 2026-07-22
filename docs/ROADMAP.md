@@ -44,6 +44,8 @@ The roadmap prioritizes one validated replayable path. The baseline system is th
 
 **Exit gate:** telemetry is either a validated secondary engine or explicitly labeled exploratory if the data cannot support stronger claims.
 
+**Current result:** the frozen OPSSAT-AD v2 group-temporal holdout has 425 test segments. The robust baseline reaches ROC-AUC 0.6096, PR-AUC 0.3889, recall 0.9643, F1 0.5284, and false-alarm rate 0.8281 at the fixed exploratory threshold. Isolation Forest comparison reaches ROC-AUC 0.5502 and false-alarm rate 0.9263, so it is not fused into the canonical score. Threshold selection is explicitly not tuned on the locked holdout; alert workload, delay, and localization semantics remain unresolved. The telemetry capability remains explicitly exploratory; see [Phase 4 Telemetry Baseline](PHASE_4_TELEMETRY_BASELINE.md).
+
 ## Week 4 — Calibration, explanations, and policy
 
 **Deliverables**

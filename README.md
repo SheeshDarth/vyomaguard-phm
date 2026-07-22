@@ -33,6 +33,7 @@ $env:PYTHONPATH = "src"
 python -m pytest
 python -m vymoa_guard_phm.replay --scenario nominal --output reports/generated
 python -m vymoa_guard_phm.data.manifest --manifest-dir data/manifests
+python -m vymoa_guard_phm.evaluation.telemetry --segments data/downloads/opssat-ad/segments.csv --manifest data/manifests/esa_opssat_ad.yaml
 python -m streamlit run src/vymoa_guard_phm/app.py
 ```
 
@@ -49,6 +50,7 @@ Available deterministic fixtures:
 - Data-quality validation with stale, contradictory, missing, and invalid-input abstention.
 - Logistic Regression-compatible orbit baseline with deterministic heuristic fallback.
 - Robust telemetry statistics with optional Isolation Forest comparison path.
+- OPSSAT-AD segment-level holdout evaluator with anomaly-only metrics and no probability claims.
 - Deterministic mission policy with reason codes and rule traces.
 - Canonical JSON and Markdown report rendering.
 - Streamlit dashboard with Mission Overview, Orbit Risk, Telemetry Health, Decision Report, and Data Quality views.
@@ -63,6 +65,8 @@ Available deterministic fixtures:
 - [Data and Labels](docs/DATA_AND_LABELS.md)
   - [Dataset Label Audit](docs/DATASET_LABEL_AUDIT.md)
   - [Phase 3 Orbit Baseline](docs/PHASE_3_BASELINE.md)
+  - [Phase 4 Telemetry Baseline](docs/PHASE_4_TELEMETRY_BASELINE.md)
+  - [Phase 4 Deep Review](docs/PHASE_4_REVIEW.md)
 - [Evaluation and Acceptance](docs/EVALUATION_AND_ACCEPTANCE.md)
 - [Decision Policy](docs/DECISION_POLICY.md)
 - [Six-Week Roadmap](docs/ROADMAP.md)
