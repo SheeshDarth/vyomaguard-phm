@@ -24,7 +24,7 @@ The roadmap prioritizes one validated replayable path. The baseline system is th
 **Deliverables**
 
 - engineered CDM feature pipeline;
-- logistic regression baseline;
+- transparent regression/ranking baseline for the audited continuous target;
 - temporal holdout evaluation;
 - initial threshold and class mapping;
 - failure-case table.
@@ -92,7 +92,7 @@ Cut in this order:
 2. Optional autoencoder/LSTM/Transformer.
 3. Compound scenario polish beyond one fixture.
 4. Telemetry breadth; keep one bounded dataset/channel subset.
-5. Boosted orbit model; keep calibrated logistic regression.
+5. Boosted orbit model; keep the transparent continuous regression/ranking baseline.
 
 Do not cut validation, abstention, provenance, policy trace, or deterministic JSON replay.
 

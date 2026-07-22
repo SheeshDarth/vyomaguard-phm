@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any, Literal
 
 ManifestStatus = Literal["PASS", "WARN", "FAIL"]
-ALLOWED_SPLITS = {"temporal", "group_temporal", "temporal-grouped"}
+ALLOWED_SPLITS = {"temporal", "group_temporal"}
 PLACEHOLDER_MARKER = "UNCONFIRMED"
 
 
@@ -28,6 +28,8 @@ def _parse_value(raw_value: str) -> Any:
         try:
             return ast.literal_eval(value)
         except (SyntaxError, ValueError) as exc:
+            if value.startswith("[") and value.endswith("]"):
+                return [item.strip().strip("\"'") for item in value[1:-1].split(",") if item.strip()]
             raise ValueError(f"Unsupported manifest value: {value!r}") from exc
     if value.lower() in {"null", "none"}:
         return None
@@ -73,6 +75,7 @@ class DatasetManifest:
     dataset_id: str
     source_name: str
     source_snapshot: str
+    source_uri: str
     acquired_at: str
     checksum: str
     license_note: str
@@ -85,6 +88,7 @@ class DatasetManifest:
     split_strategy: str
     status: str
     notes: str = ""
+    artifact_checksums: tuple[str, ...] = ()
 
     @classmethod
     def from_mapping(cls, payload: dict[str, Any]) -> "DatasetManifest":
@@ -104,6 +108,7 @@ class DatasetManifest:
             dataset_id=text("dataset_id"),
             source_name=text("source_name"),
             source_snapshot=text("source_snapshot"),
+            source_uri=text("source_uri"),
             acquired_at=text("acquired_at"),
             checksum=text("checksum"),
             license_note=text("license_note"),
@@ -116,6 +121,7 @@ class DatasetManifest:
             split_strategy=text("split_strategy"),
             status=text("status"),
             notes=text("notes"),
+            artifact_checksums=fields("artifact_checksums"),
         )
 
     @classmethod
@@ -125,7 +131,7 @@ class DatasetManifest:
 
     def to_dict(self) -> dict[str, Any]:
         payload = asdict(self)
-        for key in ("entity_fields", "feature_fields", "excluded_fields"):
+        for key in ("entity_fields", "feature_fields", "excluded_fields", "artifact_checksums"):
             payload[key] = list(payload[key])
         return payload
 
@@ -135,6 +141,7 @@ class DatasetManifest:
             "dataset_id",
             "source_name",
             "source_snapshot",
+            "source_uri",
             "acquired_at",
             "checksum",
             "license_note",
@@ -161,6 +168,18 @@ class DatasetManifest:
             findings.append(ManifestFinding("FAIL", "MANIFEST_INVALID_CHECKSUM", "error", "Checksum must be a 64-character SHA-256 hex digest.", "checksum"))
         if not self.feature_fields:
             findings.append(ManifestFinding("WARN", "MANIFEST_FEATURES_UNCONFIRMED", "warning", "Feature fields must be confirmed from the source schema before training.", "feature_fields"))
+        for artifact in self.artifact_checksums:
+            if "=" not in artifact:
+                findings.append(ManifestFinding("FAIL", "MANIFEST_INVALID_ARTIFACT_CHECKSUM", "error", "Artifact checksums must use the form filename=sha256.", "artifact_checksums"))
+                continue
+            filename, digest = artifact.split("=", 1)
+            if not filename or not re.fullmatch(r"[0-9a-fA-F]{64}", digest):
+                findings.append(ManifestFinding("FAIL", "MANIFEST_INVALID_ARTIFACT_CHECKSUM", "error", "Artifact checksum entries must contain a filename and 64-character SHA-256 digest.", "artifact_checksums"))
+        if "risk" in self.feature_fields:
+            findings.append(ManifestFinding("FAIL", "MANIFEST_TARGET_LEAKAGE", "error", "The continuous risk target cannot be used as an input feature.", "feature_fields"))
+        overlapping_keys = sorted(set(self.entity_fields) & set(self.feature_fields))
+        if overlapping_keys:
+            findings.append(ManifestFinding("FAIL", "MANIFEST_GROUP_FEATURE_OVERLAP", "error", f"Entity/group fields cannot also be predictors: {overlapping_keys}.", "feature_fields"))
 
         if not any(finding.status != "PASS" for finding in findings):
             findings.append(ManifestFinding("PASS", "MANIFEST_READY", "info", "Manifest is complete and frozen for controlled use."))
@@ -184,12 +203,15 @@ def load_manifests(manifest_dir: str | Path) -> list[tuple[Path, DatasetManifest
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Audit VymoaGaurd PHM dataset manifests before training.")
     parser.add_argument("--manifest-dir", default="data/manifests", help="Directory containing flat YAML manifests.")
+    parser.add_argument("--dataset-id", action="append", dest="dataset_ids", help="Audit only this dataset ID; repeat for multiple selected datasets.")
     parser.add_argument("--strict", action="store_true", help="Return exit code 1 when any manifest is not ready.")
     args = parser.parse_args(argv)
 
     reports = []
     exit_code = 0
     for path, manifest in load_manifests(args.manifest_dir):
+        if args.dataset_ids and manifest.dataset_id not in args.dataset_ids:
+            continue
         findings = manifest.audit()
         reports.append({"path": str(path), "manifest": manifest.to_dict(), "findings": [finding.to_dict() for finding in findings]})
         if args.strict and any(finding.status != "PASS" for finding in findings):

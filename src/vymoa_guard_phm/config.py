@@ -14,7 +14,7 @@ class AssessmentConfig:
     telemetry_anomaly_threshold: float = 0.65
     freshness_limit_minutes: float = 60.0
     policy_version: str = "policy-0.1.0"
-    orbit_model_version: str = "orbit-heuristic-baseline-0.1.0"
+    orbit_model_version: str = "orbit-regression-ranking-baseline-0.1.0"
     telemetry_model_version: str = "telemetry-robust-iforest-0.1.0"
     random_seed: int = 42
     required_telemetry: bool = True
@@ -28,4 +28,3 @@ class AssessmentConfig:
         values = asdict(cls())
         values.update(payload)
         return cls(**values)
-

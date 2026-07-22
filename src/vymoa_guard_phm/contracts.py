@@ -49,6 +49,8 @@ class OrbitAssessment:
     threshold_version: str
     top_features: list[dict[str, Any]] = field(default_factory=list)
     evidence: list[str] = field(default_factory=list)
+    raw_value: float | None = None
+    raw_value_unit: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -99,4 +101,3 @@ class MissionAssessment:
         payload = asdict(self)
         payload["quality_findings"] = [finding.to_dict() for finding in self.quality_findings]
         return payload
-

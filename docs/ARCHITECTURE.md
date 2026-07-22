@@ -34,7 +34,7 @@ Inputs are selected from the source brief’s candidate datasets: ESA Collision 
 
 ### B. Validator
 
-The validator is a hard gate. It checks schema, missingness, timestamps, duplicates, freshness, unsupported values, contradictions, and split overlap. It emits structured findings that are visible in the report.
+The validator is a hard gate. It checks schema, missingness, timestamps, duplicates, freshness, unsupported values, contradictions, and split overlap. It emits structured findings that are visible in the report. Dataset manifests also carry source URIs and artifact-level hashes; target/availability contracts define source-order target construction separately from runtime policy.
 
 ### C. Feature and window builder
 
@@ -42,7 +42,7 @@ This component builds CDM event features and telemetry windows. It owns fit-on-t
 
 ### D. Orbit risk engine
 
-Primary capability. It begins with calibrated logistic regression or a transparent tree baseline. The selected model is the simplest model that passes the frozen acceptance matrix. Its explanations are feature attributions.
+Primary capability. It begins with a transparent regression/ranking baseline because the audited ESA target is continuous log risk. The source-order final-CDM selector is a versioned boundary before feature fitting. The selected model is the simplest model that passes the frozen group-temporal acceptance matrix. Its explanations are feature attributions; calibrated probability language requires a separately audited target.
 
 ### E. Telemetry anomaly engine
 

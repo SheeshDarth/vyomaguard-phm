@@ -124,7 +124,7 @@ The MVP is accepted only when all Must requirements pass and the following are d
 - no detected temporal/group leakage;
 - fixed fixture replay is reproducible;
 - missing/stale/contradictory inputs abstain correctly;
-- orbit metrics include ROC-AUC, PR-AUC, high-risk F1/recall, and calibration error;
+- orbit metrics include log-risk regression error, ranking correlation, tail retrieval, and calibration only if a separately audited probability target is approved;
 - telemetry metrics include precision, recall, F1, false-alarm rate, and detection delay where labels or injected faults support them;
 - every triage output has a deterministic rule trace;
 - JSON and Markdown exports match the dashboard’s displayed assessment;

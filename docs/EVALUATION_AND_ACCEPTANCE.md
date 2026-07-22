@@ -12,9 +12,9 @@ The numeric targets below are proposed starting gates. Final values must be sign
 |---|---:|---|
 | Label validity | 100% of label-audit checklist complete; unresolved semantics block probability claims | Label-audit note and manifest |
 | Leakage | 0 detected train/holdout overlap by event/group/time | Automated leakage test |
-| Orbit discrimination | Report ROC-AUC and PR-AUC; PR-AUC must beat the positive-prevalence baseline or explain why not | Frozen temporal holdout report |
-| High-risk recall | Provisional target ≥ 0.80 at a review-load threshold agreed in Week 1 | Confusion matrix and threshold record |
-| Orbit calibration | Provisional expected calibration error ≤ 0.10 if probability claim is allowed | Reliability diagram and calibration artifact |
+| Orbit regression | Report MAE/RMSE in source-defined base-10 log-risk units | Frozen event-temporal holdout report |
+| Orbit ranking | Report Spearman/Kendall correlation and top-risk retrieval at the declared review load | Frozen event-temporal holdout report |
+| Orbit probability calibration | Not applicable unless a separately audited binary target and probability claim are approved | Explicit claim decision and calibration artifact, if applicable |
 | Telemetry detection | Provisional injected-fault/label recall ≥ 0.80 with false-alarm rate reported and capped by a Week 1 target | Fault manifest and holdout metrics |
 | Detection delay | Report median and p95 delay; target must be agreed for the selected sampling/window semantics | Detection-delay table |
 | Abstention safety | 100% of required malformed/stale/contradictory fixtures abstain as expected | Adversarial fixture tests |
@@ -28,12 +28,10 @@ The project does not pass by selectively reporting favorable metrics. Any failed
 
 ## 3. Orbit risk metrics
 
-- ROC-AUC for ranking quality across thresholds.
-- PR-AUC because high-risk events may be rare.
-- F1 for the selected high-risk class.
-- Recall/false-negative rate for high-risk events.
-- Confusion matrix at the frozen triage threshold.
-- Calibration curve and expected calibration error when probability semantics are valid.
+- MAE and RMSE in source-defined base-10 log-risk units.
+- Spearman/Kendall ranking correlation and top-k/tail retrieval at the declared review load.
+- Error and ranking stability across temporal, event, missingness, and distribution-shift slices.
+- Binary recall, confusion matrices, or calibration only after a separately audited binary target and threshold are approved.
 - Slice analysis by time period, object/group, and missingness bucket where supported.
 
 ## 4. Telemetry metrics

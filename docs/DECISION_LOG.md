@@ -34,3 +34,15 @@
 
 **Decision:** Use local Parquet/SQLite and Streamlit with CPU-compatible inference.  
 **Rationale:** This matches the solo-build and RTX 4050 constraints and keeps deployment scope bounded.
+
+## DL-008 - Freeze audited dataset choices and target semantics
+
+**Decision:** Use the ESA Collision Avoidance Challenge archive for a continuous final-risk regression/ranking task and OPSSAT-AD v2 `segments.csv` for supervised telemetry anomaly detection with segment-level grouping.
+
+**Rationale:** The ESA source defines `risk` as a continuous base-10 log value at the final CDM, not a binary collision outcome. OPSSAT-AD supplies binary anomaly labels, timestamped raw segments, and a documented train split. The decision prevents unsupported probability claims and preserves telemetry window evidence.
+
+## DL-009 - Separate frozen data provenance from the modeling contract
+
+**Decision:** Freeze source URIs, artifact hashes, label definitions, and grouping metadata now, but keep feature availability, split assignments, evaluation thresholds, and public model claims provisional until Phase 3 independently reproduces them.
+
+**Rationale:** The Phase 2 architecture review found that dataset identity alone does not prove decision-time availability or leakage-free modeling. The repository now has machine-readable target contracts, source-order final-CDM selection with explicit tie handling, canonical `group_temporal` manifests, and a transparent continuous regression/ranking slice. Phase 3 must add runtime artifact verification, manifest-driven feature allowlists, pre-registered metrics, and replay evidence before any model claim is frozen.

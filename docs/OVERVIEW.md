@@ -13,7 +13,7 @@ The project is designed as a credible solo build on an RTX 4050, not as producti
 ## 2. Product identity
 
 **Name:** VymoaGaurd PHM  
-**Positioning:** A solo-built space mission-assurance prototype for explainable conjunction-risk classification, telemetry anomaly detection, and operator triage.  
+**Positioning:** A solo-built space mission-assurance prototype for explainable conjunction-risk ranking/regression, telemetry anomaly detection, and operator triage.
 **Primary audience:** reviewers, internship interviewers, and technically curious mission-operations stakeholders.  
 **Secondary audience:** developers who want to inspect the data, model, policy, and evidence chain.
 
@@ -39,7 +39,7 @@ The system must answer that question with evidence and uncertainty. It must not 
 
 | Area | MVP commitment | Deliberately deferred |
 |---|---|---|
-| Orbit | CDM feature pipeline and one validated classifier | 3D visualization, autonomous maneuver planning |
+| Orbit | CDM feature pipeline and one validated regression/ranking model | 3D visualization, autonomous maneuver planning |
 | Telemetry | One public dataset, bounded channels, baseline anomaly detector | Broad fleet monitoring, many spacecraft at once |
 | Decision support | Deterministic triage and evidence trace | Learned policy, LLM-generated safety advice |
 | Explainability | Feature attribution and rule trace | Causal claims, natural-language rationale without evidence |

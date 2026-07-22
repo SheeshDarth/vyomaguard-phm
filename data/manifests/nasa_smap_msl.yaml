@@ -1,6 +1,7 @@
 dataset_id: nasa-smap-msl
 source_name: NASA SMAP/MSL anomaly detection dataset
 source_snapshot: fallback-only
+source_uri: UNCONFIRMED-confirm-from-source-record
 acquired_at: UNCONFIRMED-freeze-before-training
 checksum: UNCONFIRMED-freeze-before-training
 license_note: UNCONFIRMED-confirm-before-training

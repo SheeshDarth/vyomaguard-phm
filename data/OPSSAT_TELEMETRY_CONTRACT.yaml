@@ -1,0 +1,14 @@
+contract_id: esa-opssat-telemetry-v1
+dataset_id: esa-opssat-ad
+source_uri: https://zenodo.org/records/15108715
+raw_artifact: segments.csv
+target_field: anomaly
+target_type: binary_segment_label
+group_field: segment
+channel_field: channel
+time_field: timestamp
+split_strategy: group_temporal
+feature_fields: [value]
+excluded_fields: [label, segment, train, sampling]
+allowed_claims: [anomaly_score, anomaly_detection]
+prohibited_claims: [failure_probability, failure_diagnosis, maneuver_command]

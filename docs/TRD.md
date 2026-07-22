@@ -24,7 +24,7 @@ Implement a local Python system whose deterministic core can be invoked from a C
 ### 3.1 Dataset adapters
 
 - Accept explicit dataset manifests rather than hidden downloads.
-- Record source name, version/snapshot, acquisition date, license/usage note, checksum, and schema revision.
+- Record source name, version/snapshot, source URI, acquisition date, license/usage note, primary and artifact-level checksums, and schema revision.
 - Separate raw immutable files from normalized feature tables.
 - Fail with a typed validation error when the input is not supported.
 
@@ -56,7 +56,7 @@ Feature names are dataset-dependent. The data contract must not assume a field e
 
 ### 3.4 Orbit risk engine
 
-The baseline shall be logistic regression or a comparable transparent tabular model. A gradient-boosted model may replace it only if it passes the same frozen temporal holdout gates and improves the agreed objective without unacceptable calibration or explanation regressions.
+The audited ESA target is continuous base-10 log risk, so the baseline shall be a transparent regression/ranking model. A classifier is permitted only if a separate binary target and threshold are pre-registered from the label audit. A gradient-boosted model may replace the baseline only if it passes the same frozen group-temporal holdout gates and improves the agreed objective without unacceptable explanation regressions.
 
 Required output:
 
@@ -98,7 +98,7 @@ Core records:
 
 | Record | Purpose |
 |---|---|
-| `DatasetManifest` | Dataset identity, checksum, license note, schema/version, acquisition metadata. |
+| `DatasetManifest` | Dataset identity, source URI, primary/artifact checksums, license note, schema/version, acquisition metadata. |
 | `InputWindow` | Validated CDM or telemetry slice used for one assessment. |
 | `FeatureSnapshot` | Model-ready features and transformation metadata. |
 | `OrbitAssessment` | Orbit score/class, attribution, model and threshold versions. |

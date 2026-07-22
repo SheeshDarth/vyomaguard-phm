@@ -1,15 +1,17 @@
 dataset_id: esa-opssat-ad
 source_name: ESA OPSSAT-AD
-source_snapshot: UNCONFIRMED-freeze-before-training
-acquired_at: UNCONFIRMED-freeze-before-training
-checksum: UNCONFIRMED-freeze-before-training
-license_note: UNCONFIRMED-confirm-before-training
-schema_version: UNCONFIRMED-confirm-from-source-schema
-label_definition: UNCONFIRMED-complete-after-label-audit
-time_field: UNCONFIRMED-confirm-from-source-schema
-entity_fields: []
-feature_fields: []
-excluded_fields: []
-split_strategy: temporal
-status: UNVERIFIED
-notes: Use injected-fault evaluation if audited labels are insufficient.
+source_snapshot: zenodo-15108715-v2-segments.csv
+source_uri: https://zenodo.org/records/15108715
+acquired_at: 2026-07-22
+checksum: d5201e9e751eb2a53a0ff7c11567dc4239f594ea4b479b2aa66fe67ddcbcb9ba
+artifact_checksums: [segments.csv=d5201e9e751eb2a53a0ff7c11567dc4239f594ea4b479b2aa66fe67ddcbcb9ba, dataset.csv=b524177da6f516d5c9f63c7acbc385341f0ad42046ef20c1bed2d25e51b98f02]
+license_note: CC BY 4.0; attribute the Zenodo record and dataset authors. The raw artifact remains outside this repository.
+schema_version: segments.csv-8-columns
+label_definition: Binary segment anomaly indicator in the anomaly field; label is a constant category name and must not be used as the target.
+time_field: timestamp
+entity_fields: [segment, channel]
+feature_fields: [value]
+excluded_fields: [label, anomaly, segment, train, sampling]
+split_strategy: group_temporal
+status: FROZEN
+notes: 303493 rows, 2123 segments, 9 channels, 203229 nominal rows and 100264 anomaly rows. The train flag is constant within every segment; split by segment before any row-level feature fitting. Companion derived feature table dataset.csv SHA-256 is b524177da6f516d5c9f63c7acbc385341f0ad42046ef20c1bed2d25e51b98f02.

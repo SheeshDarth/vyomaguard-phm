@@ -20,7 +20,7 @@ Do not claim that the system:
 
 Prefer:
 
-- “calibrated conjunction-risk classification under the selected dataset’s label definition”;
+- “source-defined conjunction-risk ranking/regression under the selected dataset’s label definition”;
 - “telemetry anomaly score”;
 - “feature attribution” rather than “causal explanation”;
 - “human review state” or “triage” rather than “command”;

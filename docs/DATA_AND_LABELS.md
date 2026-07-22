@@ -4,6 +4,8 @@
 
 This document prevents the model from making stronger claims than the data supports. Dataset choice, target semantics, split strategy, and provenance are implementation gates, not cleanup work.
 
+The completed initial audit is recorded in [Dataset and Label Audit](DATASET_LABEL_AUDIT.md). The current selections are ESA Collision Avoidance Challenge for orbit risk and OPSSAT-AD v2 for telemetry.
+
 ## 2. Candidate datasets from the source brief
 
 | Signal | Candidate | Required Week 1 decision |
@@ -12,7 +14,7 @@ This document prevents the model from making stronger claims than the data suppo
 | Telemetry anomaly | ESA OPSSAT-AD | Prefer if labels, channel metadata, and licensing/format support the evaluation plan. |
 | Telemetry anomaly fallback | NASA SMAP/MSL anomaly detection dataset | Use if it gives clearer labels or a more reproducible anomaly protocol. |
 
-The final dataset choice must be recorded in a manifest with source, version/snapshot, checksum, license/usage note, acquisition date, schema version, and preprocessing revision.
+The final dataset choice must be recorded in a manifest with source, version/snapshot, source URI, primary checksum, artifact-level checksums, license/usage note, acquisition date, schema version, and preprocessing revision. The current machine-readable target contracts are [ESA orbit target](../data/ESA_ORBIT_TARGET_CONTRACT.yaml) and [OPSSAT telemetry](../data/OPSSAT_TELEMETRY_CONTRACT.yaml).
 
 ## 3. Label audit
 
@@ -35,8 +37,10 @@ If the answer is unclear, the UI and reports must use `ranking_score` or `anomal
 dataset_id: string
 source_name: string
 source_snapshot: string
+source_uri: string
 acquired_at: timestamp
 checksum: sha256
+artifact_checksums: [filename=sha256]
 license_note: string
 schema_version: string
 label_definition: string
@@ -88,6 +92,7 @@ fault_window_reference (if injected)
 - Keep the final temporal holdout untouched until model and threshold selection are frozen.
 - Fit imputers, scalers, encoders, and calibration transforms only on training data.
 - Do not use future telemetry windows, post-event labels, or downstream decision fields as predictors.
+- For ESA orbit data, select the last occurrence of each `event_id` in immutable source-row order. Do not sort by `time_to_tca`; the contract uses `source_row_index` as the tie-breaker.
 
 ## 7. Telemetry evaluation modes
 

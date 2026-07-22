@@ -1,0 +1,13 @@
+contract_id: esa-orbit-target-v1
+dataset_id: esa-collision-avoidance-challenge
+source_uri: https://kelvins.esa.int/media/public/competitions/collision-avoidance-challenge/train_data.zip
+target_field: risk
+target_type: continuous
+target_units: base10_log_risk
+group_field: event_id
+row_selection: last_occurrence_by_event_id_in_source_order
+tie_breaker: source_row_index
+time_sort_for_target_selection: PROHIBITED
+feature_availability: UNCONFIRMED-phase3-decision-time-review
+allowed_claims: [regression, ranking_score]
+prohibited_claims: [collision_probability, binary_collision_label, maneuver_command]

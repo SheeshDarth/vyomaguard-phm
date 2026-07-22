@@ -14,7 +14,7 @@ Deliverables:
 
 Exit gate: the repository can be cloned and its documentation can be read without private mission data.
 
-## Phase 1 - Foundation and contracts (current)
+## Phase 1 - Foundation and contracts (complete)
 
 Primary skills: `codebase-orientation`, `integration-test-planner`, `unit-test-starter`.
 
@@ -28,16 +28,18 @@ Deliverables:
 
 Exit gate: `python -m pytest` passes and every fixture produces a deterministic canonical assessment.
 
-## Phase 2 - Dataset acquisition and label audit
+## Phase 2 - Dataset acquisition and label audit (current)
 
 Primary skills: `security-quick-scan` for data-boundary review and `integration-test-planner` for ingestion tests.
 
 Deliverables:
 
-- frozen dataset manifests, checksums, and download instructions;
+- frozen dataset manifests, source URIs, artifact checksums, and download instructions;
 - documented label semantics and entity/time grouping;
-- chronological/group splits and leakage tests;
+- machine-readable target/availability contracts, chronological/group splits, and leakage tests;
 - an explicit decision on probability versus ranking/anomaly terminology.
+
+Current selection: ESA Collision Avoidance Challenge for continuous orbit risk and OPSSAT-AD v2 for timestamped telemetry anomaly evidence. NASA SMAP/MSL remains a fallback.
 
 Exit gate: a frozen, auditable dataset snapshot passes the label and leakage acceptance matrix.
 
@@ -48,7 +50,8 @@ Primary skills: `unit-test-starter` for feature/model edge cases and `performanc
 Deliverables:
 
 - CDM adapter and feature pipeline;
-- logistic-regression baseline and temporal holdout evaluation;
+- exact source-order final-CDM target construction;
+- transparent continuous regression/ranking baseline and event-temporal holdout evaluation;
 - threshold metrics, failure-case analysis, and feature attribution;
 - optional XGBoost comparison only after baseline gates pass.
 

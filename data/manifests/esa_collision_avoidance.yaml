@@ -1,15 +1,17 @@
 dataset_id: esa-collision-avoidance-challenge
 source_name: ESA Collision Avoidance Challenge
-source_snapshot: UNCONFIRMED-freeze-before-training
-acquired_at: UNCONFIRMED-freeze-before-training
-checksum: UNCONFIRMED-freeze-before-training
-license_note: UNCONFIRMED-confirm-before-training
-schema_version: UNCONFIRMED-confirm-from-source-schema
-label_definition: UNCONFIRMED-complete-after-label-audit
-time_field: UNCONFIRMED-confirm-from-source-schema
-entity_fields: []
-feature_fields: []
-excluded_fields: []
-split_strategy: temporal-grouped
-status: UNVERIFIED
-notes: Do not train or claim calibrated probability until the label audit is complete.
+source_snapshot: kelvins-2019-train_data.zip-train_data.csv
+source_uri: https://kelvins.esa.int/media/public/competitions/collision-avoidance-challenge/train_data.zip
+acquired_at: 2026-07-22
+checksum: 68362fe5629cc80f17291f2d73f733bf4e922675e37b91a8ee79afadb46f3edc
+artifact_checksums: [train_data.zip=68362fe5629cc80f17291f2d73f733bf4e922675e37b91a8ee79afadb46f3edc]
+license_note: Publicly released by ESA for the challenge; keep the artifact outside this repository and review challenge terms before redistribution.
+schema_version: train_data.csv-103-columns
+label_definition: Continuous base-10 log risk value in the final CDM row for each event_id; this is not a binary collision outcome.
+time_field: time_to_tca
+entity_fields: [event_id, mission_id]
+feature_fields: [time_to_tca, max_risk_estimate, max_risk_scaling, miss_distance, relative_speed, relative_position_r, relative_position_t, relative_position_n, relative_velocity_r, relative_velocity_t, relative_velocity_n, t_time_lastob_start, t_time_lastob_end, t_recommended_od_span, t_actual_od_span, t_obs_available, t_obs_used, t_residuals_accepted, t_weighted_rms, t_rcs_estimate, t_cd_area_over_mass, t_cr_area_over_mass, t_sedr, t_j2k_sma, t_j2k_ecc, t_j2k_inc, t_ct_r, t_cn_r, t_cn_t, t_crdot_r, t_crdot_t, t_crdot_n, t_ctdot_r, t_ctdot_t, t_ctdot_n, t_ctdot_rdot, t_cndot_r, t_cndot_t, t_cndot_n, t_cndot_rdot, t_cndot_tdot, c_object_type, c_time_lastob_start, c_time_lastob_end, c_recommended_od_span, c_actual_od_span, c_obs_available, c_obs_used, c_residuals_accepted, c_weighted_rms, c_rcs_estimate, c_cd_area_over_mass, c_cr_area_over_mass, c_sedr, c_j2k_sma, c_j2k_ecc, c_j2k_inc, c_ct_r, c_cn_r, c_cn_t, c_crdot_r, c_crdot_t, c_crdot_n, c_ctdot_r, c_ctdot_t, c_ctdot_n, c_ctdot_rdot, c_cndot_r, c_cndot_t, c_cndot_n, c_cndot_rdot, c_cndot_tdot, t_span, c_span, t_h_apo, t_h_per, c_h_apo, c_h_per, geocentric_latitude, azimuth, elevation, mahalanobis_distance, t_position_covariance_det, c_position_covariance_det, t_sigma_r, c_sigma_r, t_sigma_t, c_sigma_t, t_sigma_n, c_sigma_n, t_sigma_rdot, c_sigma_rdot, t_sigma_tdot, c_sigma_tdot, t_sigma_ndot, c_sigma_ndot, F10, F3M, SSN, AP]
+excluded_fields: [risk, event_id, mission_id]
+split_strategy: group_temporal
+status: FROZEN
+notes: 162634 rows and 13154 event groups. The source states the final risk is the last row of each event; 225 event groups were not monotonically ordered by time_to_tca and require source-order preservation during preprocessing. Use regression/ranking terminology unless a separate binary target is pre-registered.

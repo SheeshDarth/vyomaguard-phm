@@ -4,7 +4,7 @@
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Explainable space mission-assurance prototype for conjunction-risk classification, satellite telemetry anomaly detection, and deterministic operator triage.
+Explainable space mission-assurance prototype for conjunction-risk ranking, satellite telemetry anomaly detection, and deterministic operator triage.
 
 > **Safety boundary:** This is research/portfolio software. It is not flight-certified, does not issue maneuver commands, and does not replace flight-dynamics or mission-operations procedures.
 
@@ -12,14 +12,14 @@ Explainable space mission-assurance prototype for conjunction-risk classificatio
 
 VymoaGaurd PHM turns two evidence streams into one auditable mission-assurance assessment:
 
-1. A CDM-based orbit-risk baseline scores conjunction scenarios under documented assumptions.
+1. A CDM-based orbit-risk baseline ranks conjunction scenarios against the audited continuous ESA log-risk target under documented assumptions.
 2. A telemetry baseline detects unusual behavior and localizes affected channels/windows.
 3. A deterministic policy layer converts risk, anomaly evidence, data quality, freshness, and uncertainty into `GREEN`, `AMBER`, `RED`, or `INSUFFICIENT_DATA`.
 4. A Streamlit dashboard and JSON/Markdown reports expose the evidence, provenance, explanations, and limitations.
 
 The product claim is intentionally narrow:
 
-> Given validated inputs and fixed assumptions, VymoaGaurd PHM produces a reproducible, explainable conjunction-risk classification and deterministic operator triage.
+> Given validated inputs and fixed assumptions, VymoaGaurd PHM produces a reproducible, explainable conjunction-risk ranking/anomaly assessment and deterministic operator triage.
 
 ## Quick start
 
@@ -61,6 +61,7 @@ Available deterministic fixtures:
 - [Technical Requirements](docs/TRD.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Data and Labels](docs/DATA_AND_LABELS.md)
+- [Dataset Label Audit](docs/DATASET_LABEL_AUDIT.md)
 - [Evaluation and Acceptance](docs/EVALUATION_AND_ACCEPTANCE.md)
 - [Decision Policy](docs/DECISION_POLICY.md)
 - [Six-Week Roadmap](docs/ROADMAP.md)
@@ -88,7 +89,7 @@ Downloaded datasets, real mission telemetry, secrets, model checkpoints, and gen
 
 ## Model and safety boundaries
 
-- Primary orbit model: Logistic Regression first; XGBoost only after acceptance gates pass.
+- Primary orbit model: transparent regression/ranking baseline first; classification only after a validated binary target; XGBoost only after acceptance gates pass.
 - Secondary telemetry model: robust rolling statistics plus Isolation Forest.
 - Deep sequence models are optional experiments and never block the MVP.
 - Cross-domain evidence is combined through deterministic rules, not an unvalidated joint probability.
