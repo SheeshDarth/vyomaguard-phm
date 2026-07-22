@@ -1,0 +1,11 @@
+dataset_id: esa-opssat-ad
+source_name: ESA OPSSAT-AD
+source_snapshot: UNCONFIRMED-freeze-before-training
+label_definition: UNCONFIRMED-complete-after-label-audit
+time_field: UNCONFIRMED-confirm-from-source-schema
+entity_fields: []
+feature_fields: []
+excluded_fields: []
+split_strategy: temporal
+status: UNVERIFIED
+notes: Use injected-fault evaluation if audited labels are insufficient.

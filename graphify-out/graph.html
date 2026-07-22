@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VymoaGaurd PHM Knowledge Graph</title>
+  <style>
+    :root { color-scheme: dark; --bg:#0d1320; --card:#172235; --muted:#9fb0c7; --ink:#edf3fb; --accent:#66d9ef; --line:#31445e; }
+    body { margin:0; font:15px/1.45 system-ui,sans-serif; background:var(--bg); color:var(--ink); }
+    main { max-width:1200px; margin:auto; padding:28px; }
+    h1 { margin:0 0 6px; } h2 { margin-top:30px; } .muted { color:var(--muted); }
+    .toolbar { display:flex; gap:10px; flex-wrap:wrap; margin:20px 0; }
+    input,select { background:var(--card); border:1px solid var(--line); border-radius:8px; color:var(--ink); padding:10px; }
+    .stats,.grid { display:grid; gap:12px; } .stats { grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); } .grid { grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px; } .card h3 { margin:0 0 6px; color:var(--accent); }
+    .tag { display:inline-block; margin:4px 5px 0 0; padding:3px 7px; border-radius:999px; background:#223655; color:#cde7ff; font-size:12px; }
+    table { width:100%; border-collapse:collapse; } th,td { border-bottom:1px solid var(--line); padding:9px 6px; text-align:left; vertical-align:top; } th { color:var(--accent); }
+    .hidden { display:none; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>VymoaGaurd PHM Knowledge Graph</h1>
+  <div class="muted">Evidence-based project map from VymoaGaurd_PHM_Project_Brief.md · EXTRACTED and INFERRED edges are preserved.</div>
+  <div class="stats" id="stats"></div>
+  <div class="toolbar"><input id="search" placeholder="Filter nodes or edges…"><select id="community"><option value="all">All communities</option></select></div>
+  <h2>Communities</h2><section class="grid" id="communities"></section>
+  <h2>Edges</h2><table><thead><tr><th>Source</th><th>Relation</th><th>Target</th><th>Confidence</th><th>Source location</th></tr></thead><tbody id="edges"></tbody></table>
+</main>
+<script>
+let graph = null; let byId = {};
+const comm = document.getElementById('community');
+function render(){
+  if(!graph) return;
+  const q=document.getElementById('search').value.toLowerCase(); const c=comm.value;
+  document.getElementById('communities').innerHTML=Object.entries(graph.communities).filter(([id,x])=>c==='all'||id===c).map(([id,x])=>`<article class="card"><h3>${x.label}</h3><div>${x.nodes.map(n=>`<span class="tag">${byId[n].label}</span>`).join('')}</div></article>`).join('');
+  document.getElementById('edges').innerHTML=graph.links.filter(e=>{const s=byId[e.source],t=byId[e.target]; return (c==='all'||String(s.community)===c||String(t.community)===c) && (!q||`${s.label} ${e.relation} ${t.label} ${e.source_location}`.toLowerCase().includes(q));}).map(e=>`<tr><td>${byId[e.source].label}</td><td>${e.relation}</td><td>${byId[e.target].label}</td><td><span class="tag">${e.confidence} ${e.confidence_score}</span></td><td class="muted">${e.source_location}</td></tr>`).join('');
+}
+document.getElementById('search').addEventListener('input',render); comm.addEventListener('change',render); render();
+fetch('graph.json').then(r=>r.json()).then(data=>{
+  graph=data; byId=Object.fromEntries(graph.nodes.map(n=>[n.id,n]));
+  Object.entries(graph.communities).forEach(([id,x])=>{const o=document.createElement('option');o.value=id;o.textContent=x.label;comm.appendChild(o);});
+  document.getElementById('stats').innerHTML=`<div class="card"><strong>${graph.nodes.length}</strong><br><span class="muted">nodes</span></div><div class="card"><strong>${graph.links.length}</strong><br><span class="muted">edges</span></div><div class="card"><strong>${Object.keys(graph.communities).length}</strong><br><span class="muted">communities</span></div><div class="card"><strong>${graph.audit.corpus_words}</strong><br><span class="muted">source words</span></div>`;
+  render();
+}).catch(err=>{document.getElementById('communities').innerHTML='<article class="card"><h3>Graph load failed</h3><p>Serve this folder locally or open graph.json directly. '+err+'</p></article>';});
+</script>
+</body>
+</html>

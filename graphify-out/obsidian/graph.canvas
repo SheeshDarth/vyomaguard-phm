@@ -1,0 +1,16 @@
+{
+  "nodes": [
+    {"id":"product","type":"group","x":0,"y":0,"width":360,"height":220,"label":"Product Mission Assurance","color":"1"},
+    {"id":"orbit","type":"group","x":440,"y":0,"width":360,"height":220,"label":"Orbit Risk Engine","color":"2"},
+    {"id":"telemetry","type":"group","x":880,"y":0,"width":360,"height":220,"label":"Telemetry Health","color":"3"},
+    {"id":"policy","type":"group","x":220,"y":360,"width":520,"height":260,"label":"Policy Dashboard Reporting","color":"4"},
+    {"id":"constraints","type":"group","x":860,"y":360,"width":420,"height":260,"label":"Validation Delivery Constraints","color":"5"}
+  ],
+  "edges": [
+    {"id":"e1","fromNode":"product","toNode":"orbit","label":"primary risk evidence"},
+    {"id":"e2","fromNode":"product","toNode":"telemetry","label":"secondary health evidence"},
+    {"id":"e3","fromNode":"orbit","toNode":"policy","label":"risk score and attribution"},
+    {"id":"e4","fromNode":"telemetry","toNode":"policy","label":"anomaly score and windows"},
+    {"id":"e5","fromNode":"constraints","toNode":"policy","label":"acceptance and abstention gates"}
+ ]
+}

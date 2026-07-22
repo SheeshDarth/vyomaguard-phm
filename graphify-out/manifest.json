@@ -1,0 +1,17 @@
+{
+  "source_root": ".",
+  "included_files": [
+    {
+      "path": "VymoaGaurd_PHM_Project_Brief.md",
+      "file_type": "document",
+      "words": 990,
+      "status": "included"
+    }
+  ],
+  "excluded_files": [
+    {
+      "path": "Aerospace Predictive Maintenance Report - Google Docs.pdf",
+      "reason": "User requested analysis of the Markdown brief; PDF was not used as source input."
+    }
+  ]
+}

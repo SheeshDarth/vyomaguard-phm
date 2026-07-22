@@ -1,0 +1,62 @@
+{
+  "nominal": {
+    "scenario_id": "nominal",
+    "orbit_event": {
+      "event_id": "fixture-nominal-001",
+      "timestamp": "2026-01-01T00:00:00Z",
+      "risk_score_hint": 0.18,
+      "features": {"relative_geometry": 0.1, "uncertainty_indicator": 0.2, "time_to_event": 0.8}
+    },
+    "telemetry": [
+      {"timestamp":"2026-01-01T00:00:00Z","channel":"power_bus","value":10.0},
+      {"timestamp":"2026-01-01T00:01:00Z","channel":"power_bus","value":10.1},
+      {"timestamp":"2026-01-01T00:02:00Z","channel":"power_bus","value":9.9},
+      {"timestamp":"2026-01-01T00:00:00Z","channel":"thermal","value":21.0},
+      {"timestamp":"2026-01-01T00:01:00Z","channel":"thermal","value":21.1},
+      {"timestamp":"2026-01-01T00:02:00Z","channel":"thermal","value":20.9}
+    ],
+    "metadata": {"freshness_minutes": 5, "fixture_version": "0.1.0"}
+  },
+  "conjunction_risk": {
+    "scenario_id": "conjunction_risk",
+    "orbit_event": {
+      "event_id": "fixture-risk-001",
+      "timestamp": "2026-01-01T01:00:00Z",
+      "risk_score_hint": 0.92,
+      "features": {"relative_geometry": 0.9, "uncertainty_indicator": 0.8, "time_to_event": 0.2}
+    },
+    "telemetry": [
+      {"timestamp":"2026-01-01T01:00:00Z","channel":"power_bus","value":10.0},
+      {"timestamp":"2026-01-01T01:01:00Z","channel":"power_bus","value":10.1},
+      {"timestamp":"2026-01-01T01:02:00Z","channel":"power_bus","value":9.9},
+      {"timestamp":"2026-01-01T01:00:00Z","channel":"thermal","value":21.0},
+      {"timestamp":"2026-01-01T01:01:00Z","channel":"thermal","value":21.1},
+      {"timestamp":"2026-01-01T01:02:00Z","channel":"thermal","value":20.9}
+    ],
+    "metadata": {"freshness_minutes": 5, "fixture_version": "0.1.0"}
+  },
+  "telemetry_anomaly": {
+    "scenario_id": "telemetry_anomaly",
+    "orbit_event": {
+      "event_id": "fixture-telemetry-001",
+      "timestamp": "2026-01-01T02:00:00Z",
+      "risk_score_hint": 0.20,
+      "features": {"relative_geometry": 0.1, "uncertainty_indicator": 0.2, "time_to_event": 0.8}
+    },
+    "telemetry": [
+      {"timestamp":"2026-01-01T02:00:00Z","channel":"power_bus","value":10.0},
+      {"timestamp":"2026-01-01T02:01:00Z","channel":"power_bus","value":10.1},
+      {"timestamp":"2026-01-01T02:02:00Z","channel":"power_bus","value":17.0},
+      {"timestamp":"2026-01-01T02:00:00Z","channel":"thermal","value":21.0},
+      {"timestamp":"2026-01-01T02:01:00Z","channel":"thermal","value":21.1},
+      {"timestamp":"2026-01-01T02:02:00Z","channel":"thermal","value":20.9}
+    ],
+    "metadata": {"freshness_minutes": 5, "fixture_version": "0.1.0", "fault_injection": "power_bus step change"}
+  },
+  "bad_input": {
+    "scenario_id": "bad_input",
+    "orbit_event": {"event_id": "fixture-bad-001", "timestamp": "2026-01-01T03:00:00Z", "features": {}},
+    "telemetry": [],
+    "metadata": {"freshness_minutes": 999, "contradictory": true, "fixture_version": "0.1.0"}
+  }
+}

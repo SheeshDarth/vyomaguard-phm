@@ -1,0 +1,11 @@
+dataset_id: esa-collision-avoidance-challenge
+source_name: ESA Collision Avoidance Challenge
+source_snapshot: UNCONFIRMED-freeze-before-training
+label_definition: UNCONFIRMED-complete-after-label-audit
+time_field: UNCONFIRMED-confirm-from-source-schema
+entity_fields: []
+feature_fields: []
+excluded_fields: []
+split_strategy: temporal-grouped
+status: UNVERIFIED
+notes: Do not train or claim calibrated probability until the label audit is complete.

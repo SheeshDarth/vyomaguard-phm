@@ -1,0 +1,2 @@
+"""Deterministic mission triage policy."""
+

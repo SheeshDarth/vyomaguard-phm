@@ -1,0 +1,11 @@
+dataset_id: nasa-smap-msl
+source_name: NASA SMAP/MSL anomaly detection dataset
+source_snapshot: fallback-only
+label_definition: UNCONFIRMED-complete-after-label-audit
+time_field: UNCONFIRMED-confirm-from-source-schema
+entity_fields: []
+feature_fields: []
+excluded_fields: []
+split_strategy: temporal
+status: UNVERIFIED
+notes: Fallback telemetry dataset if it supports clearer labels/evaluation than OPSSAT-AD.
