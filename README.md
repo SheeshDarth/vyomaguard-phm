@@ -63,6 +63,8 @@ Available deterministic fixtures:
 - [Evaluation and Acceptance](docs/EVALUATION_AND_ACCEPTANCE.md)
 - [Decision Policy](docs/DECISION_POLICY.md)
 - [Six-Week Roadmap](docs/ROADMAP.md)
+- [Build Phases and Skill Sequence](docs/BUILD_PHASES.md)
+- [Integration Test Plan](docs/INTEGRATION_TEST_PLAN.md)
 - [Safety and Limitations](docs/SAFETY_AND_LIMITATIONS.md)
 - [Requirements Traceability](docs/REQUIREMENTS_TRACEABILITY.md)
 - [GitHub Setup Options](docs/GITHUB_SETUP.md)
