@@ -10,6 +10,7 @@
 | Ranking score | A score useful for ordering cases when probability semantics are not defensible. |
 | Anomaly score | A measure of unusual telemetry behavior relative to a reference population; not automatically a failure probability. |
 | Feature attribution | A model-behavior explanation showing which inputs moved a prediction; not causal proof. |
+| Low ranking tier | A ranking-score label below the configured monitor threshold; it is not a safety determination. |
 | Data-quality gate | A pre-scoring rule that checks whether the system has adequate, valid evidence. |
 | Abstention | Returning `INSUFFICIENT_DATA` instead of forcing a substantive prediction. |
 | Temporal holdout | A test partition later in time than training data, used to reduce leakage and measure time generalization. |

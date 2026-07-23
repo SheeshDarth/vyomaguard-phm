@@ -22,6 +22,24 @@ def test_bad_replay_abstains():
     assert assessment.decision.abstained is True
 
 
+def test_malformed_replay_abstains_instead_of_crashing():
+    assessment = run_assessment(InputWindow.from_dict({"scenario_id": "malformed", "orbit_event": [], "telemetry": [None]}))
+
+    assert assessment.decision.status == "INSUFFICIENT_DATA"
+    assert assessment.decision.abstained is True
+    assert any(item.code == "DATA_INVALID_SHAPE" for item in assessment.quality_findings)
+
+
+def test_fixture_replay_records_actual_fixture_identity_and_heuristic_semantics():
+    assessment = run_assessment(load_scenario("nominal"))
+
+    assert assessment.input_manifest["source"] == "scenarios.json"
+    assert assessment.input_manifest["fixture_sha256"]
+    assert assessment.orbit.risk_class == "LOW_RANKING"
+    assert assessment.orbit.model_version == "orbit-heuristic-fixture-0.1.0"
+    assert all(item.get("attribution") is None for item in assessment.orbit.top_features)
+
+
 def test_nonfinite_input_abstains_with_strict_evidence_record():
     window = InputWindow(
         scenario_id="nonfinite",

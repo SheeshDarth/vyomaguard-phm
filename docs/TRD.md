@@ -64,7 +64,7 @@ Required output:
 {
   "score_type": "calibrated_probability|ranking_score",
   "score": 0.0,
-  "risk_class": "SAFE|MONITOR|REVIEW",
+  "risk_class": "LOW_RANKING|MONITOR|REVIEW",
   "threshold_version": "string",
   "top_features": [
     {"name": "string", "value": 0.0, "attribution": 0.0, "direction": "raises|lowers|unknown"}

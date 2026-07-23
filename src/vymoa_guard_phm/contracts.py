@@ -6,6 +6,7 @@ import hashlib
 import json
 from dataclasses import asdict, dataclass, field
 from hmac import compare_digest
+from collections.abc import Mapping
 from typing import Any, Literal
 
 ValidationStatus = Literal["PASS", "WARN", "FAIL"]
@@ -31,14 +32,52 @@ class InputWindow:
     orbit_event: dict[str, Any]
     telemetry: list[dict[str, Any]] = field(default_factory=list)
     metadata: dict[str, Any] = field(default_factory=dict)
+    shape_errors: list[str] = field(default_factory=list)
 
     @classmethod
-    def from_dict(cls, payload: dict[str, Any]) -> "InputWindow":
+    def from_dict(cls, payload: object) -> "InputWindow":
+        shape_errors: list[str] = []
+        if not isinstance(payload, Mapping):
+            return cls("unknown", {}, [], {}, ["input must be an object"])
+
+        orbit_value = payload.get("orbit_event")
+        if orbit_value is None:
+            orbit_event: dict[str, Any] = {}
+        elif isinstance(orbit_value, Mapping):
+            orbit_event = dict(orbit_value)
+        else:
+            shape_errors.append("orbit_event must be an object")
+            orbit_event = {}
+
+        telemetry_value = payload.get("telemetry")
+        if telemetry_value is None:
+            telemetry: list[dict[str, Any]] = []
+        elif isinstance(telemetry_value, list):
+            telemetry = []
+            for index, row in enumerate(telemetry_value):
+                if isinstance(row, Mapping):
+                    telemetry.append(dict(row))
+                else:
+                    shape_errors.append(f"telemetry[{index}] must be an object")
+        else:
+            shape_errors.append("telemetry must be an array")
+            telemetry = []
+
+        metadata_value = payload.get("metadata")
+        if metadata_value is None:
+            metadata: dict[str, Any] = {}
+        elif isinstance(metadata_value, Mapping):
+            metadata = dict(metadata_value)
+        else:
+            shape_errors.append("metadata must be an object")
+            metadata = {}
+
         return cls(
             scenario_id=str(payload.get("scenario_id", "unknown")),
-            orbit_event=dict(payload.get("orbit_event") or {}),
-            telemetry=list(payload.get("telemetry") or []),
-            metadata=dict(payload.get("metadata") or {}),
+            orbit_event=orbit_event,
+            telemetry=telemetry,
+            metadata=metadata,
+            shape_errors=shape_errors,
         )
 
 

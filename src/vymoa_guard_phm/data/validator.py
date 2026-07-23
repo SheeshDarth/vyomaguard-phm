@@ -14,6 +14,10 @@ def _finding(status: str, code: str, severity: str, message: str, field: str | N
 
 def validate_input(window: InputWindow, config: AssessmentConfig) -> list[ValidationFinding]:
     findings: list[ValidationFinding] = []
+    findings.extend(
+        _finding("FAIL", "DATA_INVALID_SHAPE", "error", message, "input")
+        for message in window.shape_errors
+    )
     event = window.orbit_event
     if not event:
         findings.append(_finding("FAIL", "DATA_MISSING_ORBIT_EVENT", "error", "An orbit event is required.", "orbit_event"))
@@ -44,10 +48,13 @@ def validate_input(window: InputWindow, config: AssessmentConfig) -> list[Valida
     freshness = window.metadata.get("freshness_minutes")
     if freshness is not None:
         try:
-            if float(freshness) > config.freshness_limit_minutes:
+            freshness_value = float(freshness)
+            if not isfinite(freshness_value) or freshness_value < 0:
+                raise ValueError
+            if freshness_value > config.freshness_limit_minutes:
                 findings.append(_finding("FAIL", "DATA_STALE", "error", f"Input freshness exceeds {config.freshness_limit_minutes} minutes.", "metadata.freshness_minutes"))
         except (TypeError, ValueError):
-            findings.append(_finding("FAIL", "DATA_INVALID_FRESHNESS", "error", "Freshness must be numeric.", "metadata.freshness_minutes"))
+            findings.append(_finding("FAIL", "DATA_INVALID_FRESHNESS", "error", "Freshness must be finite and non-negative numeric data.", "metadata.freshness_minutes"))
 
     if config.required_telemetry and not window.telemetry:
         findings.append(_finding("FAIL", "DATA_MISSING_TELEMETRY", "error", "Telemetry is required for a complete mission assessment.", "telemetry"))

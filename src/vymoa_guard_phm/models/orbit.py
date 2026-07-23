@@ -77,8 +77,9 @@ class OrbitRiskEngine:
         return max(0.0, min(1.0, sum(abs(value) for value in values.values()) / (len(values) * 10.0)))
 
     def score(self, event: dict[str, Any]) -> OrbitAssessment:
+        model_version = self.config.orbit_model_version if self.fitted else "orbit-heuristic-fixture-0.1.0"
         if not event:
-            return OrbitAssessment("INSUFFICIENT_DATA", "ranking_score", None, "INSUFFICIENT_DATA", self.config.orbit_model_version, self.config.policy_version)
+            return OrbitAssessment("INSUFFICIENT_DATA", "ranking_score", None, "INSUFFICIENT_DATA", model_version, self.config.policy_version)
         raw_value: float | None = None
         if self.fitted:
             _, vector = feature_vector(event, self.feature_names)
@@ -94,12 +95,13 @@ class OrbitRiskEngine:
         else:
             score = self._heuristic_score(event)
             values = numeric_features(event)
-            top_features = [{"name": name, "value": value, "attribution": value, "direction": "raises" if value >= 0 else "lowers"} for name, value in sorted(values.items(), key=lambda item: abs(item[1]), reverse=True)[:5]]
-            evidence = ["Heuristic output is a fixture-only ranking score; no probability claim is permitted."]
+            top_features = [{"name": name, "value": value, "attribution": None, "direction": "unknown", "evidence_type": "heuristic_signal"} for name, value in sorted(values.items(), key=lambda item: abs(item[1]), reverse=True)[:5]]
+            evidence = ["Heuristic output is a fixture-only ranking score; no probability claim is permitted.", "Feature values are heuristic signals, not fitted-model attributions."]
         if score >= self.config.orbit_red_threshold:
             risk_class = "REVIEW"
         elif score >= self.config.orbit_monitor_threshold:
             risk_class = "MONITOR"
         else:
-            risk_class = "SAFE"
-        return OrbitAssessment("SCORED", "ranking_score", round(score, 6), risk_class, self.config.orbit_model_version, self.config.policy_version, top_features, evidence + ["Feature attribution describes model evidence; it is not causal explanation."], raw_value, "base10_log_risk" if raw_value is not None else None)
+            risk_class = "LOW_RANKING"
+        final_evidence = evidence if not self.fitted else evidence + ["Feature attribution describes model evidence; it is not causal explanation."]
+        return OrbitAssessment("SCORED", "ranking_score", round(score, 6), risk_class, model_version, self.config.policy_version, top_features, final_evidence, raw_value, "base10_log_risk" if raw_value is not None else None)

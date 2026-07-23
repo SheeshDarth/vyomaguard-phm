@@ -104,7 +104,7 @@ Current status: the pure policy function now validates score semantics and numer
 
 The current phase does not combine orbit and telemetry into a probability or issue maneuver commands.
 
-## Phase 6 - Dashboard and reporting (next)
+## Phase 6 - Dashboard and reporting (complete)
 
 Primary skills: `ui-ux-pro-max`, `accessibility-basic-check`, and `readme-polish`.
 
@@ -116,6 +116,8 @@ Deliverables:
 - dashboard smoke tests and accessible status presentation.
 
 Exit gate: the dashboard and exports render from the same `MissionAssessment` object.
+
+Current status: the four-screen Streamlit dashboard is implemented as a presentation layer over the canonical assessment. It exposes evidence integrity, reason codes, rule traces, score semantics, limitations, and JSON/Markdown exports. The dashboard smoke test confirms the screen contract and canonical evidence payload; see [Phase 6 Dashboard](PHASE_6_DASHBOARD.md) and [Phase 6 Deep Review](PHASE_6_REVIEW.md).
 
 ## Phase 7 - Hardening and demo
 

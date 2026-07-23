@@ -114,7 +114,7 @@ def evaluate_policy(
         return _finish("INSUFFICIENT_DATA", "REQUEST_DATA", ["TELEMETRY_EVIDENCE_MISSING"], trace, True, config, "Policy abstained rather than emitting a high-severity telemetry state without evidence.")
     trace.append(_trace("POL-007", False, "Telemetry evidence is sufficient for the configured score state."))
 
-    expected_class = "REVIEW" if orbit_red else "MONITOR" if orbit_review else "SAFE"
+    expected_class = "REVIEW" if orbit_red else "MONITOR" if orbit_review else "LOW_RANKING"
     model_disagreement = str(orbit.risk_class).upper() != expected_class
     trace.append(_trace("POL-008", model_disagreement, f"Orbit risk class {orbit.risk_class!r} agrees with score-derived class {expected_class!r}: {not model_disagreement}."))
     if model_disagreement:

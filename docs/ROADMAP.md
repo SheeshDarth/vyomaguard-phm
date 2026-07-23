@@ -75,6 +75,8 @@ The roadmap prioritizes one validated replayable path. The baseline system is th
 
 **Phase 5 completion note:** the deterministic policy and evidence fingerprint are complete. Phase 6 must consume these fields without reimplementing policy logic or recasting review statuses as health or safety judgments.
 
+**Phase 6 completion note:** the dashboard and Markdown/JSON reports consume the same canonical assessment. The UI labels orbit and telemetry outputs as ranking/anomaly scores, displays evidence-chain verification, and keeps the review-only safety boundary visible. PDF remains deferred until report parity and layout verification justify it.
+
 ## Week 6 — Hardening and presentation
 
 **Deliverables**

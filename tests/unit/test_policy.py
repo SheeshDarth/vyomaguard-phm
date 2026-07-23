@@ -5,7 +5,7 @@ from vymoa_guard_phm.policy.rules import evaluate_policy
 
 def _orbit(score: float, risk_class: str | None = None) -> OrbitAssessment:
     if risk_class is None:
-        risk_class = "REVIEW" if score >= 0.85 else "MONITOR" if score >= 0.65 else "SAFE"
+        risk_class = "REVIEW" if score >= 0.85 else "MONITOR" if score >= 0.65 else "LOW_RANKING"
     return OrbitAssessment("SCORED", "ranking_score", score, risk_class, "orbit", "policy")
 
 
@@ -79,7 +79,7 @@ def test_score_class_disagreement_requires_monitoring():
 
 
 def test_score_class_disagreement_overrides_red_threshold():
-    result = evaluate_policy(_orbit(0.95, "SAFE"), _telemetry(0.1), [ValidationFinding("PASS", "OK", "info", "ok")], AssessmentConfig())
+    result = evaluate_policy(_orbit(0.95, "LOW_RANKING"), _telemetry(0.1), [ValidationFinding("PASS", "OK", "info", "ok")], AssessmentConfig())
     assert result.status == "AMBER"
     assert result.review_action == "MONITOR"
     assert result.rule_trace[-1]["rule_id"] == "POL-100"

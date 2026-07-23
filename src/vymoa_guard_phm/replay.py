@@ -20,11 +20,17 @@ DEFAULT_FIXTURE = Path(__file__).resolve().parents[2] / "data" / "fixtures" / "s
 
 
 def load_scenario(scenario_id: str, fixture_path: str | Path = DEFAULT_FIXTURE) -> InputWindow:
-    payload = json.loads(Path(fixture_path).read_text(encoding="utf-8"))
+    fixture = Path(fixture_path)
+    payload = json.loads(fixture.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError("Scenario fixture must contain an object keyed by scenario ID.")
     try:
-        return InputWindow.from_dict(payload[scenario_id])
+        window = InputWindow.from_dict(payload[scenario_id])
     except KeyError as exc:
         raise ValueError(f"Unknown scenario {scenario_id!r}. Available: {sorted(payload)}") from exc
+    window.metadata["_fixture_source"] = fixture.name
+    window.metadata["_fixture_sha256"] = hashlib.sha256(fixture.read_bytes()).hexdigest()
+    return window
 
 
 def _run_id(window: InputWindow, config: AssessmentConfig) -> str:
@@ -63,12 +69,12 @@ def run_assessment(window: InputWindow, config: AssessmentConfig | None = None) 
         run_id=_run_id(window, config),
         scenario_id=window.scenario_id,
         created_at="2026-01-01T00:00:00+00:00",
-        input_manifest={"scenario_id": window.scenario_id, "source": "data/fixtures/scenarios.json", "fixture_version": "0.1.0", "input_hash": input_hash, "config_hash": config_hash},
+        input_manifest={"scenario_id": window.scenario_id, "source": window.metadata.get("_fixture_source", "in-memory input"), "fixture_sha256": window.metadata.get("_fixture_sha256"), "fixture_version": window.metadata.get("fixture_version", "unknown"), "input_hash": input_hash, "config_hash": config_hash},
         quality_findings=findings,
         orbit=orbit,
         telemetry=telemetry,
         decision=decision,
-        versions={"package": "0.1.0", "policy": config.policy_version, "policy_hash": policy_hash, "orbit_model": config.orbit_model_version, "telemetry_model": config.telemetry_model_version},
+        versions={"package": "0.1.0", "policy": config.policy_version, "policy_hash": policy_hash, "orbit_model": orbit.model_version, "telemetry_model": telemetry.model_version},
         limitations=[
             "This replay uses deterministic demo fixtures, not live mission data.",
             "Orbit score is a ranking-oriented baseline until dataset labels support calibration.",

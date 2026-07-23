@@ -18,7 +18,7 @@ class AssessmentConfig:
     freshness_limit_minutes: float = 60.0
     policy_version: str = "policy-0.1.0"
     orbit_model_version: str = "orbit-regression-ranking-baseline-0.1.0"
-    telemetry_model_version: str = "telemetry-robust-iforest-0.1.0"
+    telemetry_model_version: str = "telemetry-robust-statistics-0.1.0"
     random_seed: int = 42
     required_telemetry: bool = True
     required_channels: list[str] = field(default_factory=list)

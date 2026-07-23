@@ -37,6 +37,8 @@ python -m vymoa_guard_phm.evaluation.telemetry --segments data/downloads/opssat-
 python -m streamlit run src/vymoa_guard_phm/app.py
 ```
 
+The dashboard opens four canonical-assessment views: Mission Overview, Orbit Risk, Telemetry Health, and Decision Report. It replays local fixtures only; it does not connect to live mission data. If Streamlit reports `ModuleNotFoundError: No module named 'vymoa_guard_phm'`, run the install command above or set `$env:PYTHONPATH = "src"` in the same PowerShell session before starting the app.
+
 Available deterministic fixtures:
 
 - `nominal` → `GREEN`
@@ -53,7 +55,8 @@ Available deterministic fixtures:
 - OPSSAT-AD segment-level holdout evaluator with anomaly-only metrics and no probability claims.
 - Deterministic mission policy with reason codes and rule traces.
 - Canonical JSON and Markdown report rendering.
-- Streamlit dashboard with Mission Overview, Orbit Risk, Telemetry Health, Decision Report, and Data Quality views.
+- Streamlit dashboard with Mission Overview, Orbit Risk, Telemetry Health, and Decision Report views over the canonical `MissionAssessment`.
+- The default fixture replay labels the orbit fallback as `orbit-heuristic-fixture` and the low score tier as `LOW_RANKING`; neither is a safety determination.
 - Dataset adapters, manifests, label-audit helper, temporal split helper, and evaluation metrics.
 
 ## Documentation
@@ -69,6 +72,8 @@ Available deterministic fixtures:
   - [Phase 4 Deep Review](docs/PHASE_4_REVIEW.md)
   - [Phase 5 Decision Layer](docs/PHASE_5_DECISION_LAYER.md)
   - [Phase 5 Deep Review](docs/PHASE_5_REVIEW.md)
+  - [Phase 6 Dashboard](docs/PHASE_6_DASHBOARD.md)
+  - [Phase 6 Deep Review](docs/PHASE_6_REVIEW.md)
 - [Evaluation and Acceptance](docs/EVALUATION_AND_ACCEPTANCE.md)
 - [Decision Policy](docs/DECISION_POLICY.md)
 - [Six-Week Roadmap](docs/ROADMAP.md)

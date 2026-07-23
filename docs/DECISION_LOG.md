@@ -70,3 +70,15 @@
 **Decision:** Every replayed `MissionAssessment` carries input/config hashes, a policy hash, an evidence schema version, and an evidence hash computed from canonical assessment JSON with the hash field blanked. Reports use strict JSON serialization and expose the evidence hash.
 
 **Rationale:** A rule trace without integrity linkage can be altered or detached from its inputs. The fingerprint is tamper-evidence for replay and mutation checks, not an authenticity signature or a substitute for signed operational records.
+
+## DL-014 - Keep dashboard and exports on one canonical assessment
+
+**Decision:** The Streamlit dashboard renders all four screens and both download formats from one `MissionAssessment` produced by the deterministic replay path. The UI may format and summarize fields, but it does not implement model scoring or policy thresholds.
+
+**Rationale:** A single assessment object prevents dashboard/report drift and preserves the evidence chain. Statuses are presented with text, reason codes, rule traces, and safety notes so color is never the only meaning. PDF remains deferred until JSON/Markdown parity and visual verification are stable.
+
+## DL-015 - Fail closed at the public report boundary
+
+**Decision:** An assessment with a missing or invalid canonical evidence hash cannot be rendered or written as JSON/Markdown, and the dashboard stops before interpretation or download controls. Malformed input shapes are preserved as structured validation failures so policy can abstain deterministically.
+
+**Rationale:** A research/demo surface must not turn a tampered or structurally invalid object into a normal-looking report. The integrity fingerprint is still tamper evidence only; it is not an authenticity signature or a substitute for model/data validation.
